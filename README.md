@@ -1,6 +1,8 @@
 Spritely
 ========
 
+[![Build Status](https://travis-ci.org/agrobbin/spritely.svg?branch=master)](https://travis-ci.org/agrobbin/spritely)
+
 Spritely is a very small gem that hooks into the Rails asset pipeline to allow you to easily generate sprite maps.
 
 ## Why should I use this?
