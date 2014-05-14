@@ -28,6 +28,6 @@ module RailsAppHelpers
   private
 
   def runner(command)
-    %x(rails runner '#{command}')
+    %x(rails runner -e development '#{command}')
   end
 end
