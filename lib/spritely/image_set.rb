@@ -1,7 +1,7 @@
 require 'spritely/image'
 
 module Spritely
-  class ImagesSet
+  class ImageSet
     extend Forwardable
 
     def_delegator :@images, :each

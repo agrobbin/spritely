@@ -22,7 +22,7 @@ describe Spritely::SpriteMap do
   describe '#images' do
     before do
       Spritely.stub_chain(:environment, :paths).and_return(["#{__dir__}/../fixtures"])
-      allow(Spritely::ImagesSet).to receive(:new).with(["#{__dir__}/../fixtures/test/foo.png"]).and_return('images set')
+      allow(Spritely::ImageSet).to receive(:new).with(["#{__dir__}/../fixtures/test/foo.png"]).and_return('images set')
     end
 
     its(:images) { should eq('images set') }

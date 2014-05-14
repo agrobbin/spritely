@@ -1,4 +1,4 @@
-require 'spritely/images_set'
+require 'spritely/image_set'
 require 'spritely/generators/chunky_png'
 
 module Spritely
@@ -17,7 +17,7 @@ module Spritely
     end
 
     def images
-      @images ||= ImagesSet.new(files)
+      @images ||= ImageSet.new(files)
     end
 
     def generate!

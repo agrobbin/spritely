@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'ostruct'
 
-describe Spritely::ImagesSet do
+describe Spritely::ImageSet do
   class ImageDouble < OpenStruct
     attr_accessor :top
   end
@@ -14,7 +14,7 @@ describe Spritely::ImagesSet do
     allow(Spritely::Image).to receive(:new).with('second').and_return(second_image)
   end
 
-  subject! { Spritely::ImagesSet.new(['first', 'second']) }
+  subject! { Spritely::ImageSet.new(['first', 'second']) }
 
   its(:files) { should eq(['first', 'second']) }
   its(:images) { should eq([second_image, first_image]) }
