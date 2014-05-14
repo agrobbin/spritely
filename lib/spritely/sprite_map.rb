@@ -2,8 +2,7 @@ require 'spritely/image_set'
 require 'spritely/generators/chunky_png'
 
 module Spritely
-  class SpriteMap
-    attr_accessor :options # Sass expects an object returned from a script function to have an #options accessor
+  class SpriteMap < Sass::Script::Literal
     attr_reader :glob
 
     def self.create(*args)

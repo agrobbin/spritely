@@ -5,6 +5,8 @@ describe Spritely::SpriteMap do
 
   before { Spritely.stub(:directory).and_return(File) }
 
+  it { should be_a(Sass::Script::Literal) }
+
   its(:glob) { should eq('test/*.png') }
   its(:name) { should eq('test') }
   its(:filename) { should eq('test.png') }
