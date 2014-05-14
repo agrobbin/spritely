@@ -1,5 +1,6 @@
 require 'sass'
 require 'spritely/sass_functions'
+require 'spritely/sprockets/manifest'
 
 raise LoadError, "Spritely cannot be used in conjunction with Compass. Hope you choose Spritely!" if defined?(::Compass)
 
