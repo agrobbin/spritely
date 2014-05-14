@@ -16,5 +16,3 @@ module Spritely
     File.mtime(filename).to_i
   end
 end
-
-::Sass::Script::Functions.send(:include, Spritely::SassFunctions)

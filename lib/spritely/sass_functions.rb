@@ -42,3 +42,5 @@ module Spritely
     ::Sass::Script::Functions.declare :sprite_height, [:sprite_map, :image_name]
   end
 end
+
+::Sass::Script::Functions.send(:include, Spritely::SassFunctions)
