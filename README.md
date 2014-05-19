@@ -29,6 +29,8 @@ gem 'spritely'
 rspec spec
 ```
 
+Spritely uses Appraisal to test against multiple versions of Rails. See their [README](https://github.com/thoughtbot/appraisal) for more information on how to run a particular suite.
+
 ## Usage
 
 ### In Sass/Scss files
