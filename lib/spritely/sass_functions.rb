@@ -3,7 +3,7 @@ require 'spritely/sprite_map'
 module Spritely
   module SassFunctions
     def sprite_map(glob, kwargs = {})
-      SpriteMap.create(glob, kwargs)
+      SpriteMap.create(glob.value, kwargs)
     end
 
     ::Sass::Script::Functions.declare :sprite_map, [:glob], var_kwargs: true

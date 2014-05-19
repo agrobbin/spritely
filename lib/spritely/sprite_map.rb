@@ -17,7 +17,7 @@ module Spritely
     end
 
     def initialize(glob, options = {})
-      @glob = glob.value
+      @glob = glob
       @options = Options.new(options)
     end
 

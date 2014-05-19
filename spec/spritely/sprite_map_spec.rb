@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Spritely::SpriteMap do
   let(:options) { {'some_new_image_x' => 123, 'some_new_image_y' => 456, 'another_image_repeat' => true} }
 
-  subject { Spritely::SpriteMap.new(double(value: 'test/*.png'), options) }
+  subject { Spritely::SpriteMap.new('test/*.png', options) }
 
   before do
     Spritely.stub(:directory).and_return(File)
