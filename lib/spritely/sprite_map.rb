@@ -1,3 +1,4 @@
+require 'forwardable'
 require 'spritely/options'
 require 'spritely/collection'
 require 'spritely/generators/chunky_png'
