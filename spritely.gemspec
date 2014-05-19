@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = Spritely::VERSION
   s.authors     = ["Alex Robbin"]
   s.email       = ["alex@robbinsweb.biz"]
-  s.homepage    = "http://www.robbinsweb.biz"
+  s.homepage    = "https://github.com/agrobbin/spritely"
   s.license     = "MIT"
   s.summary     = "Hooks into the Rails asset pipeline to allow you to easily generate sprite maps"
 
