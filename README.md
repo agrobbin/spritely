@@ -5,6 +5,8 @@ Spritely
 
 Spritely is a very small gem that hooks into the Rails asset pipeline to allow you to easily generate sprite maps.
 
+See the [list of releases](https://github.com/agrobbin/spritely/releases) for changes in each version.
+
 ## Is this production-ready?
 
 Absolutely not. The only reason that I've released it so early is because I wanted to snag the spritely gem name on RubyGems. I will bump the version number to 0.1.0 when I am confident it can be used in production environments.
