@@ -2,11 +2,11 @@ require 'spritely/sprite_map'
 
 module Spritely
   module SassFunctions
-    def sprite_map(glob)
-      SpriteMap.create(glob)
+    def sprite_map(glob, kwargs = {})
+      SpriteMap.create(glob, kwargs)
     end
 
-    ::Sass::Script::Functions.declare :sprite_map, [:glob]
+    ::Sass::Script::Functions.declare :sprite_map, [:glob], var_kwargs: true
 
     def sprite_url(sprite_map)
       asset_url(Sass::Script::String.new("sprites/#{sprite_map.name}.png"))
@@ -15,7 +15,7 @@ module Spritely
     ::Sass::Script::Functions.declare :sprite_url, [:sprite_map]
 
     def sprite_position(sprite_map, image_name)
-      image = sprite_map.images.find(image_name.value)
+      image = sprite_map.find(image_name.value)
 
       x = Sass::Script::Number.new(image.left, image.left == 0 ? [] : ['px'])
       y = Sass::Script::Number.new(-image.top, image.top == 0 ? [] : ['px'])
@@ -26,7 +26,7 @@ module Spritely
     ::Sass::Script::Functions.declare :sprite_position, [:sprite_map, :image_name]
 
     def sprite_width(sprite_map, image_name)
-      image = sprite_map.images.find(image_name.value)
+      image = sprite_map.find(image_name.value)
 
       Sass::Script::Number.new(image.width, ['px'])
     end
@@ -34,7 +34,7 @@ module Spritely
     ::Sass::Script::Functions.declare :sprite_width, [:sprite_map, :image_name]
 
     def sprite_height(sprite_map, image_name)
-      image = sprite_map.images.find(image_name.value)
+      image = sprite_map.find(image_name.value)
 
       Sass::Script::Number.new(image.height, ['px'])
     end

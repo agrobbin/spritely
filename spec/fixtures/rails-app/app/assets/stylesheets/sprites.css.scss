@@ -1,9 +1,13 @@
-$application-sprite: sprite-map("application/*.png");
+$application-sprite: sprite-map("application/*.png", $background-repeat: true);
+
+body {
+  background-image: sprite-url($application-sprite);
+  background-position: sprite-position($application-sprite, "background");
+}
 
 #mario {
   background-image: sprite-url($application-sprite);
   background-position: sprite-position($application-sprite, "mario");
   width: sprite-width($application-sprite, "mario");
   height: sprite-height($application-sprite, "mario");
-  color: #000;
 }

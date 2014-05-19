@@ -2,53 +2,84 @@ require 'spec_helper'
 require 'ostruct'
 
 describe Spritely::ImageSet do
-  class ImageDouble < OpenStruct
-    attr_accessor :top
+  let(:path) { "#{__dir__}/../fixtures/test/foo.png" }
+  let(:options) { {repeat: true} }
+
+  subject { Spritely::ImageSet.new(path, options) }
+
+  its(:path) { should eq(path) }
+  its(:options) { should eq(options) }
+  its(:data) { should eq(File.read(path)) }
+  its(:width) { should eq(1) }
+  its(:height) { should eq(1) }
+  its(:name) { should eq('foo') }
+  its(:left) { should eq(0) }
+
+  describe '#top' do
+    before { subject.top = 123 }
+
+    its(:top) { should eq(123) }
   end
 
-  let(:first_image) { ImageDouble.new(name: 'foo', width: 1, height: 10) }
-  let(:second_image) { ImageDouble.new(name: 'bar', width: 100, height: 100) }
+  describe '#repeated?' do
+    it { should be_repeated }
 
-  before do
-    allow(Spritely::Image).to receive(:new).with('first').and_return(first_image)
-    allow(Spritely::Image).to receive(:new).with('second').and_return(second_image)
-  end
+    context 'repeat option is passed as truthy' do
+      let(:options) { {repeat: 'repeat'} }
 
-  subject! { Spritely::ImageSet.new(['first', 'second']) }
+      it { should be_repeated }
+    end
 
-  its(:files) { should eq(['first', 'second']) }
-  its(:images) { should eq([second_image, first_image]) }
-  its(:max_width) { should eq(100) }
-  its(:total_height) { should eq(110) }
+    context 'repeat option is passed as false' do
+      let(:options) { {repeat: false} }
 
-  describe 'positioning' do
-    it 'should set the #top position of each image' do
-      expect(first_image.top).to eq(100)
-      expect(second_image.top).to eq(0)
+      it { should_not be_repeated }
+    end
+
+    context 'repeat option is not passed' do
+      let(:options) { {} }
+
+      it { should_not be_repeated }
     end
   end
 
-  describe '#each delegation' do
-    it 'should pass along the #each method call to the internal #images array' do
-      expect(first_image).to receive(:blah!)
-      expect(second_image).to receive(:blah!)
-      subject.each(&:blah!)
-    end
-  end
-
-  describe '#find' do
-    it 'should find the correct image by name' do
-      expect(subject.find('foo')).to eq(first_image)
-      expect(subject.find('bar')).to eq(second_image)
-    end
-  end
-
-  describe '#last_modification_time' do
-    before do
-      allow(Spritely).to receive(:modification_time).with('first').and_return(10)
-      allow(Spritely).to receive(:modification_time).with('second').and_return(100)
+  describe '#position_in!' do
+    class ImageDouble
+      attr_accessor :top, :left
     end
 
-    its(:last_modification_time) { should eq(100) }
+    before { subject.top = 123 }
+
+    context 'the image is repeated' do
+      let(:first_image) { ImageDouble.new }
+      let(:second_image) { ImageDouble.new }
+
+      before do
+        allow(Spritely::Image).to receive(:new).with(File.read(path)).and_return(first_image, second_image)
+        subject.position_in!(2)
+      end
+
+      it 'should set the position of the images' do
+        expect(first_image.top).to eq(123)
+        expect(first_image.left).to eq(0)
+        expect(second_image.top).to eq(123)
+        expect(second_image.left).to eq(1)
+      end
+    end
+
+    context 'the image is not repeated' do
+      let(:options) { {repeat: false} }
+      let(:image) { ImageDouble.new }
+
+      before do
+        allow(Spritely::Image).to receive(:new).with(File.read(path)).and_return(image)
+        subject.position_in!(1)
+      end
+
+      it 'should set the position of the image' do
+        expect(image.top).to eq(123)
+        expect(image.left).to eq(0)
+      end
+    end
   end
 end

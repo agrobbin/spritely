@@ -1,9 +1,14 @@
-require 'spritely/image_set'
+require 'spritely/options'
+require 'spritely/collection'
 require 'spritely/generators/chunky_png'
 
 module Spritely
   class SpriteMap < Sass::Script::Literal
-    attr_reader :glob
+    extend Forwardable
+
+    def_delegators :collection, :find, :width, :height, :images
+
+    attr_reader :glob, :options
 
     def self.create(*args)
       new(*args).tap do |sprite_map|
@@ -11,12 +16,17 @@ module Spritely
       end
     end
 
-    def initialize(glob)
+    def initialize(glob, options = {})
       @glob = glob.value
+      @options = Options.new(options)
     end
 
-    def images
-      @images ||= ImageSet.new(files)
+    def inspect
+      "#<Spritely::SpriteMap name=#{name} filename=#{filename}>"
+    end
+
+    def collection
+      @collection ||= Collection.create(files, options)
     end
 
     def generate!
@@ -42,11 +52,7 @@ module Spritely
     end
 
     def outdated?
-      images.last_modification_time > modification_time
-    end
-
-    def modification_time
-      Spritely.modification_time(filename)
+      collection.last_modification_time > Spritely.modification_time(filename)
     end
   end
 end

@@ -2,39 +2,50 @@ require 'spritely/image'
 
 module Spritely
   class ImageSet
-    extend Forwardable
+    attr_accessor :top
+    attr_reader :path, :options, :data, :width, :height
 
-    def_delegator :@images, :each
-
-    attr_reader :files, :images
-
-    def initialize(files)
-      @files = files
-      @images = files.collect { |file| Image.new(file) }.sort_by(&:width).reverse
-      position!
+    def initialize(path, options)
+      @path = path
+      @options = options
+      @data = File.read(path)
+      @width, @height = data[0x10..0x18].unpack('NN')
     end
 
-    def find(name)
-      images.find { |image| image.name == name }
+    def name
+      File.basename(path, ".png")
     end
 
-    def max_width
-      @max_width ||= images.collect(&:width).max
+    def images
+      @images ||= []
     end
 
-    def total_height
-      @total_height ||= images.collect(&:height).reduce(:+)
+    def left
+      0
     end
 
-    def last_modification_time
-      files.collect { |file| Spritely.modification_time(file) }.max
+    def repeated?
+      !!options[:repeat]
+    end
+
+    def position_in!(collection_width)
+      if repeated?
+        left = 0
+        while left < collection_width
+          add_image!(left)
+          left += width
+        end
+      else
+        add_image!(0)
+      end
     end
 
     private
 
-    def position!
-      images.each_with_index do |image, index|
-        image.top = images.collect(&:height)[0..index].reduce(:+) - image.height
+    def add_image!(left)
+      images << Image.new(data).tap do |image|
+        image.top = top
+        image.left = left
       end
     end
   end

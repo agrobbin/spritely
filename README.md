@@ -56,3 +56,11 @@ This should result in the files in `images/application` matching `*.png` (within
   height: 20px;
 }
 ```
+
+### Repetition
+
+Assuming file `background.png` in `app/assets/images/application`, you can repeat the image horizontally by passing the following keyword arguments.
+
+```scss
+$application-sprite: sprite-map('application/*.png', $background-repeat: true);
+```

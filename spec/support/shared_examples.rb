@@ -1,17 +1,6 @@
 shared_examples "a generator" do
-  class ImagesDouble
-    def max_width; 100; end
-    def total_height; 200; end
-
-    def each(&block)
-      [
-        OpenStruct.new(data: 'first image data', left: 1, top: 10),
-        OpenStruct.new(data: 'second image data', left: 2, top: 20)
-      ].each(&block)
-    end
-  end
-
-  let(:sprite_map) { double(images: ImagesDouble.new, filename: 'blah.png') }
+  let(:images) { [OpenStruct.new(data: 'first image data', left: 1, top: 10), OpenStruct.new(data: 'second image data', left: 2, top: 20)] }
+  let(:sprite_map) { double(images: images, width: 100, height: 200, filename: 'blah.png') }
 
   its(:sprite_map) { should eq(sprite_map) }
 

@@ -18,7 +18,7 @@ module Spritely
       private
 
       def canvas
-        @canvas ||= ::ChunkyPNG::Image.new(sprite_map.images.max_width, sprite_map.images.total_height)
+        @canvas ||= ::ChunkyPNG::Image.new(sprite_map.width, sprite_map.height)
       end
     end
   end

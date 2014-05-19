@@ -2,19 +2,21 @@ require 'spec_helper'
 
 describe Spritely::Image do
   let(:path) { "#{__dir__}/../fixtures/test/foo.png" }
+  let(:data) { File.read(path) }
 
-  subject { Spritely::Image.new(path) }
+  subject { Spritely::Image.new(data) }
 
-  its(:path) { should eq(path) }
-  its(:data) { should eq(File.read(path)) }
-  its(:width) { should eq(1) }
-  its(:height) { should eq(1) }
-  its(:left) { should eq(0) }
-  its(:name) { should eq('foo') }
+  its(:data) { should eq(data) }
 
   describe '#top' do
     before { subject.top = 123 }
 
     its(:top) { should eq(123) }
+  end
+
+  describe '#left' do
+    before { subject.left = 456 }
+
+    its(:left) { should eq(456) }
   end
 end

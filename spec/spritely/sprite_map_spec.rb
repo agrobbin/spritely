@@ -1,15 +1,22 @@
 require 'spec_helper'
 
 describe Spritely::SpriteMap do
-  subject { Spritely::SpriteMap.new(double(value: 'test/*.png')) }
+  let(:options) { {'some_new_image_x' => 123, 'some_new_image_y' => 456, 'another_image_repeat' => true} }
 
-  before { Spritely.stub(:directory).and_return(File) }
+  subject { Spritely::SpriteMap.new(double(value: 'test/*.png'), options) }
+
+  before do
+    Spritely.stub(:directory).and_return(File)
+    allow(Spritely::Options).to receive(:new).with(options).and_return('options')
+  end
 
   it { should be_a(Sass::Script::Literal) }
 
   its(:glob) { should eq('test/*.png') }
+  its(:options) { should eq('options') }
   its(:name) { should eq('test') }
   its(:filename) { should eq('test.png') }
+  its(:inspect) { should eq('#<Spritely::SpriteMap name=test filename=test.png>') }
 
   describe '.create' do
     let(:sprite_map) { double(needs_generation?: true) }
@@ -21,13 +28,22 @@ describe Spritely::SpriteMap do
     end
   end
 
-  describe '#images' do
+  describe '#collection' do
+    let(:collection) { double(find: 'find value', width: 'width value', height: 'height value', images: 'images value') }
+
     before do
       Spritely.stub_chain(:environment, :paths).and_return(["#{__dir__}/../fixtures"])
-      allow(Spritely::ImageSet).to receive(:new).with(["#{__dir__}/../fixtures/test/foo.png"]).and_return('images set')
+      allow(Spritely::Collection).to receive(:create).with(["#{__dir__}/../fixtures/test/foo.png"], 'options').and_return(collection)
     end
 
-    its(:images) { should eq('images set') }
+    its(:collection) { should eq(collection) }
+
+    describe 'delegated methods' do
+      its(:find) { should eq('find value') }
+      its(:width) { should eq('width value') }
+      its(:height) { should eq('height value') }
+      its(:images) { should eq('images value') }
+    end
   end
 
   describe '#generate!' do
@@ -48,7 +64,7 @@ describe Spritely::SpriteMap do
       let(:file_exists) { true }
 
       before do
-        subject.stub_chain(:images, :last_modification_time).and_return(456)
+        subject.stub_chain(:collection, :last_modification_time).and_return(456)
         allow(Spritely).to receive(:modification_time).and_return(123)
       end
 
