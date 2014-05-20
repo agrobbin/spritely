@@ -1,8 +1,18 @@
 module RailsAppHelpers
+  GENERATOR_FLAGS = [
+    '--skip-active-record',
+    '--skip-test-unit',
+    '--skip-javascript',
+    '--skip-spring',
+    '--skip-git'
+  ]
+
   def within_rails_app(&block)
     Dir.mktmpdir do |tmpdir|
       Dir.chdir(tmpdir) do
-        %x(rails new dummy --skip-active-record --skip-test-unit --skip-javascript --skip-spring --skip-git)
+        flags = GENERATOR_FLAGS
+        flags << '--edge' if ENV['BUNDLE_GEMFILE'] =~ /rails_edge\.gemfile$/
+        %x(rails new dummy #{flags.join(' ')})
         Dir.chdir('dummy') do
           Bundler.with_clean_env do
             File.open('Gemfile', 'a') do |f|
