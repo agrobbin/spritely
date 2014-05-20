@@ -1,13 +1,13 @@
-$application-sprite: sprite-map("application/*.png", $background-repeat: true);
+$application-sprite: spritely-map("application/*.png", $background-repeat: true);
 
 body {
-  background-image: sprite-url($application-sprite);
-  background-position: sprite-position($application-sprite, "background");
+  background-image: spritely-url($application-sprite);
+  background-position: spritely-position($application-sprite, "background");
 }
 
 #mario {
-  background-image: sprite-url($application-sprite);
-  background-position: sprite-position($application-sprite, "mario");
-  width: sprite-width($application-sprite, "mario");
-  height: sprite-height($application-sprite, "mario");
+  background-image: spritely-url($application-sprite);
+  background-position: spritely-position($application-sprite, "mario");
+  width: spritely-width($application-sprite, "mario");
+  height: spritely-height($application-sprite, "mario");
 }

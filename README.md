@@ -40,15 +40,15 @@ Spritely uses Appraisal to test against multiple versions of Rails. See their [R
 ### In Sass/Scss files
 
 ```scss
-$application-sprite: sprite-map('applications/*.png');
+$application-sprite: spritely-map('applications/*.png');
 
 #icon {
   background: {
-    image: sprite-url($application-sprite);
-    position: sprite-position($application-sprite, "icon");
+    image: spritely-url($application-sprite);
+    position: spritely-position($application-sprite, "icon");
   }
-  width: sprite-width($application-sprite, "icon");
-  height: sprite-height($application-sprite, "icon");
+  width: spritely-width($application-sprite, "icon");
+  height: spritely-height($application-sprite, "icon");
 }
 ```
 
@@ -68,5 +68,5 @@ This should result in the files in `images/application` matching `*.png` (within
 Assuming file `background.png` in `app/assets/images/application`, you can repeat the image horizontally by passing the following keyword arguments.
 
 ```scss
-$application-sprite: sprite-map('application/*.png', $background-repeat: true);
+$application-sprite: spritely-map('application/*.png', $background-repeat: true);
 ```
