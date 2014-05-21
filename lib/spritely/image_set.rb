@@ -24,6 +24,14 @@ module Spritely
       0
     end
 
+    def outer_height
+      height + spacing
+    end
+
+    def spacing
+      options[:spacing] || 0
+    end
+
     def repeated?
       !!options[:repeat]
     end

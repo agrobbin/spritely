@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe Spritely::Collection do
-  let(:first_set) { double(repeated?: true, name: 'foo', width: 1, height: 10, images: [1]) }
-  let(:second_set) { double(repeated?: false, name: 'bar', width: 100, height: 100, images: [2, 3]) }
+  let(:first_set) { double(repeated?: true, name: 'foo', width: 1, outer_height: 10, images: [1]) }
+  let(:second_set) { double(repeated?: false, name: 'bar', width: 100, outer_height: 100, images: [2, 3]) }
 
   subject { Spritely::Collection.new(['file-1.png', 'file-2.png'], {'file-1' => {repeat: true}}) }
 

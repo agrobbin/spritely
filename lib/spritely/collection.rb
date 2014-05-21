@@ -40,7 +40,7 @@ module Spritely
 
     def position!
       image_sets.each_with_index do |image_set, index|
-        image_set.top = heights[0..index].reduce(:+) - image_set.height
+        image_set.top = heights[0..index].reduce(:+) - image_set.outer_height
         image_set.position_in!(width)
       end
     end
@@ -52,7 +52,7 @@ module Spritely
     end
 
     def heights
-      image_sets.collect(&:height)
+      image_sets.collect(&:outer_height)
     end
   end
 end

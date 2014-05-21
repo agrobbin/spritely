@@ -3,7 +3,7 @@ require 'ostruct'
 
 describe Spritely::ImageSet do
   let(:path) { "#{__dir__}/../fixtures/test/foo.png" }
-  let(:options) { {repeat: true} }
+  let(:options) { {repeat: true, spacing: 10} }
 
   subject { Spritely::ImageSet.new(path, options) }
 
@@ -14,6 +14,8 @@ describe Spritely::ImageSet do
   its(:height) { should eq(1) }
   its(:name) { should eq('foo') }
   its(:left) { should eq(0) }
+  its(:spacing) { should eq(10) }
+  its(:outer_height) { should eq(11) }
 
   describe '#top' do
     before { subject.top = 123 }

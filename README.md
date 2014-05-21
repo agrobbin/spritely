@@ -63,6 +63,16 @@ Assuming file `background.png` in `app/assets/images/application`, you can repea
 $application-sprite: spritely-map('application/*.png', $background-repeat: true);
 ```
 
+### Spacing
+
+There are sometimes cases where you want to add some extra spacing (or padding) to a particular image in your sprite. To do so for an image named `foo.png`:
+
+```scss
+$application-sprite: spritely-map('application/*.png', $foo-spacing: 10px);
+```
+
+This will add 10 pixels of padding to the bottom of `foo.png` within the sprite.
+
 ## Tests
 
 ```bash
