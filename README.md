@@ -27,14 +27,6 @@ Add the gem to your gemfile
 gem 'spritely'
 ```
 
-## Tests
-
-```bash
-rspec spec
-```
-
-Spritely uses Appraisal to test against multiple versions of Rails. See their [README](https://github.com/thoughtbot/appraisal) for more information on how to run a particular suite.
-
 ## Usage
 
 ### In Sass/Scss files
@@ -70,3 +62,11 @@ Assuming file `background.png` in `app/assets/images/application`, you can repea
 ```scss
 $application-sprite: spritely-map('application/*.png', $background-repeat: true);
 ```
+
+## Tests
+
+```bash
+rspec spec
+```
+
+Spritely uses Appraisal to test against multiple versions of Rails. See their [README](https://github.com/thoughtbot/appraisal) for more information on how to run a particular suite.
