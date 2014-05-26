@@ -70,13 +70,13 @@ describe Spritely::Collection do
     end
   end
 
-  describe '#last_modification_time' do
+  describe '#cache_key' do
     before do
-      allow(Spritely).to receive(:modification_time).with('file-1.png').and_return(10)
-      allow(Spritely).to receive(:modification_time).with('file-2.png').and_return(100)
+      allow(File).to receive(:mtime).with('file-1.png').and_return(10)
+      allow(File).to receive(:mtime).with('file-2.png').and_return(100)
     end
 
-    its(:last_modification_time) { should eq(100) }
+    its(:cache_key) { should eq('10100') }
   end
 
   describe '#position!' do

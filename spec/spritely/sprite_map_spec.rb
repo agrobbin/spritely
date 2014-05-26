@@ -1,22 +1,23 @@
 require 'spec_helper'
 
 describe Spritely::SpriteMap do
-  let(:options) { {'some_new_image_x' => 123, 'some_new_image_y' => 456, 'another_image_repeat' => true} }
+  let(:options_hash) { {'some_new_image_x' => 123, 'some_new_image_y' => 456, 'another_image_repeat' => true} }
+  let(:options_object) { double(options: 'options', cache_key: 'options') }
 
-  subject { Spritely::SpriteMap.new('test/*.png', options) }
+  subject { Spritely::SpriteMap.new('test/*.png', options_hash) }
 
   before do
     Spritely.stub(:directory).and_return(File)
-    allow(Spritely::Options).to receive(:new).with(options).and_return('options')
+    allow(Spritely::Options).to receive(:new).with(options_hash).and_return(options_object)
   end
 
   it { should be_a(Sass::Script::Literal) }
 
   its(:glob) { should eq('test/*.png') }
-  its(:options) { should eq('options') }
+  its(:options) { should eq(options_object) }
   its(:name) { should eq('test') }
   its(:filename) { should eq('test.png') }
-  its(:inspect) { should eq('#<Spritely::SpriteMap name=test options="options">') }
+  its(:inspect) { should eq("#<Spritely::SpriteMap name=test options=#{options_object.inspect}>") }
 
   describe '.create' do
     let(:sprite_map) { double(needs_generation?: true) }
@@ -28,12 +29,18 @@ describe Spritely::SpriteMap do
     end
   end
 
+  describe '#cache_key' do
+    before { allow(subject).to receive(:collection).and_return(double(cache_key: 'collection value')) }
+
+    its(:cache_key) { should eq('dfc047d12e4c6404e9dae98bc2851e5c') }
+  end
+
   describe '#collection' do
     let(:collection) { double(find: 'find value', width: 'width value', height: 'height value', images: 'images value') }
 
     before do
       Spritely.stub_chain(:environment, :paths).and_return(["#{__dir__}/../fixtures"])
-      allow(Spritely::Collection).to receive(:create).with(["#{__dir__}/../fixtures/test/foo.png"], 'options').and_return(collection)
+      allow(Spritely::Collection).to receive(:create).with(["#{__dir__}/../fixtures/test/foo.png"], options_object).and_return(collection)
     end
 
     its(:collection) { should eq(collection) }
@@ -64,8 +71,8 @@ describe Spritely::SpriteMap do
       let(:file_exists) { true }
 
       before do
-        subject.stub_chain(:collection, :last_modification_time).and_return(456)
-        allow(Spritely).to receive(:modification_time).and_return(123)
+        allow(subject).to receive(:cache_key).and_return('value')
+        allow(Spritely::Cache).to receive(:busted?).with('test.png', 'value').and_return(true)
       end
 
       its(:needs_generation?) { should be_true }

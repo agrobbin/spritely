@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Spritely::Generators::ChunkyPng do
-  let(:png_canvas) { double }
+  let(:png_canvas) { double(metadata: {}) }
 
   subject { Spritely::Generators::ChunkyPng.new(sprite_map) }
 
@@ -26,6 +26,7 @@ describe Spritely::Generators::ChunkyPng do
     it 'should save the PNG canvas' do
       expect(png_canvas).to receive(:save).with('blah.png', :fast_rgba)
       subject.save!
+      expect(png_canvas.metadata).to include('cache_key' => 'cachevalue')
     end
   end
 end

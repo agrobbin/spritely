@@ -12,6 +12,10 @@ module Spritely
       end
     end
 
+    def cache_key
+      options.to_s
+    end
+
     def [](key)
       options[key] || {}
     end

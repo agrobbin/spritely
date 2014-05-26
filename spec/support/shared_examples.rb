@@ -1,6 +1,6 @@
 shared_examples "a generator" do
   let(:images) { [OpenStruct.new(data: 'first image data', left: 1, top: 10), OpenStruct.new(data: 'second image data', left: 2, top: 20)] }
-  let(:sprite_map) { double(images: images, width: 100, height: 200, filename: 'blah.png') }
+  let(:sprite_map) { double(images: images, width: 100, height: 200, filename: 'blah.png', cache_key: 'cachevalue') }
 
   its(:sprite_map) { should eq(sprite_map) }
 

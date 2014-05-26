@@ -1,5 +1,6 @@
 require 'forwardable'
 require 'spritely/options'
+require 'spritely/cache'
 require 'spritely/collection'
 require 'spritely/generators/chunky_png'
 
@@ -20,6 +21,10 @@ module Spritely
     def initialize(glob, options = {})
       @glob = glob
       @options = Options.new(options)
+    end
+
+    def cache_key
+      @cache_key ||= Cache.generate(options, collection)
     end
 
     def inspect
@@ -43,17 +48,13 @@ module Spritely
     end
 
     def needs_generation?
-      !File.exist?(filename) || outdated?
+      !File.exist?(filename) || Cache.busted?(filename, cache_key)
     end
 
     private
 
     def files
       Spritely.environment.paths.flat_map { |path| Dir.glob(File.join(path, glob)) }
-    end
-
-    def outdated?
-      collection.last_modification_time > Spritely.modification_time(filename)
     end
   end
 end

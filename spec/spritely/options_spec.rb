@@ -10,6 +10,8 @@ describe Spritely::Options do
 
   subject(:options) { Spritely::Options.new(hash) }
 
+  its(:cache_key) { should eq({'some-new-image' => {x: 123, y: 456}, 'another-image' => {repeat: true}, 'yet-another-image' => {repeat: false}}.to_s) }
+
   its(['some-new-image']) { should eq({x: 123, y: 456}) }
   its(['another-image']) { should eq({repeat: true}) }
   its(['yet-another-image']) { should eq({repeat: false}) }

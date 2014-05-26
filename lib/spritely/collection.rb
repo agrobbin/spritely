@@ -16,8 +16,8 @@ module Spritely
       image_sets.find { |image_set| image_set.name == name }
     end
 
-    def last_modification_time
-      files.collect { |file| Spritely.modification_time(file) }.max
+    def cache_key
+      files.collect { |file| File.mtime(file) }.join
     end
 
     def width
