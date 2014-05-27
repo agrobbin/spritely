@@ -17,7 +17,7 @@ describe Spritely::SpriteMap do
   its(:options) { should eq(options_object) }
   its(:name) { should eq('test') }
   its(:filename) { should eq('test.png') }
-  its(:inspect) { should eq("#<Spritely::SpriteMap name=test options=#{options_object.inspect}>") }
+  its(:inspect) { should eq("#<Spritely::SpriteMap name=test options=#{options_object}>") }
 
   describe '.create' do
     let(:sprite_map) { double(needs_generation?: true) }

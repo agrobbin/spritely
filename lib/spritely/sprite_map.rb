@@ -28,7 +28,7 @@ module Spritely
     end
 
     def inspect
-      "#<Spritely::SpriteMap name=#{name} options=#{options.inspect}>"
+      "#<Spritely::SpriteMap name=#{name} options=#{options}>"
     end
 
     def collection

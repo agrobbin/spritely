@@ -10,6 +10,10 @@ module Spritely
       stripped_hash.to_s
     end
 
+    def inspect
+      "#<Spritely::Options global_options=#{global_options} options=#{options}>"
+    end
+
     def [](key)
       options[key] || global_options
     end
