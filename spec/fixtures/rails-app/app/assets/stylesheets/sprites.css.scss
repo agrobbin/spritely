@@ -1,4 +1,9 @@
-$application-sprite: spritely-map("application/*.png", $background-repeat: true, $football-spacing: 25px, $mario-spacing: 10px);
+$application-sprite: spritely-map("application/*.png",
+  $background-repeat: true,
+  $football-spacing: 100px,
+  $mario-spacing: 10px,
+  $spacing: 5px
+);
 
 body {
   background-image: spritely-url($application-sprite);

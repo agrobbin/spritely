@@ -81,6 +81,18 @@ $application-sprite: spritely-map('application/*.png', $foo-spacing: 10px);
 
 This will add 10 pixels of padding to the bottom of `foo.png` within the sprite.
 
+#### Global spacing
+
+If you want to add space between all images in a sprite, rather than specifying `$*-spacing` keyword arguments for every image, Spritely provides a global option.
+
+```scss
+$application-sprite: spritely-map('application/*.png', $spacing: 10px);
+```
+
+This will add 10 pixels of spacing between every image in the sprite.
+
+*Note that per-image spacing options will override the global spacing option.*
+
 ## Tests
 
 ```bash
