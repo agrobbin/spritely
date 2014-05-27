@@ -27,6 +27,14 @@ Add the gem to your gemfile
 gem 'spritely'
 ```
 
+Add the following to your gitignore
+
+```
+app/assets/images/sprites
+```
+
+This directory will be created in your deployed environments when precompiling assets.
+
 ## Usage
 
 ### In Sass/Scss files
