@@ -3,7 +3,12 @@ require 'spritely/sprite_map'
 module Spritely
   module SassFunctions
     def spritely_map(glob, kwargs = {})
-      SpriteMap.create(glob.value, kwargs)
+      SpriteMap.create(glob.value, kwargs).tap do |sprite_map|
+        sprite_map.files.each do |file|
+          sprockets_context.depend_on(file)
+          sprockets_context.depend_on_asset(file)
+        end
+      end
     end
 
     ::Sass::Script::Functions.declare :spritely_map, [:glob], var_kwargs: true

@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Spritely::SassFunctions do
   class SpriteMapDouble < Sass::Script::Literal
     def name; 'test'; end
+    def files; []; end
   end
 
   let(:sprite_map) { SpriteMapDouble.new }

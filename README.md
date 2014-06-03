@@ -65,13 +65,13 @@ This should result in the files in `images/application` matching `*.png` (within
 
 ### Busting the cache
 
-I have yet to figure out the "smart" way to correctly bust the sprite cache when the images themselves change without any corresponding change to Sass/Scss files. 9 times out of 10, this is not a problem, as a change to a sprited image will be accompanied by changes to CSS in your application. However, that is not always the case. When an image itself is the only change required, you have to force the sass cache to be busted. The simplest way to do this is to have an extra option in your `spritely-map` initialization:
+Spritely utilizes Sprockets' `depend_on` and `depend_on_asset` directives to listen to changes to existing images within a sprited folder. This, in addition to the cache being busted upon related stylesheet changes, should take care of 99 of out 100 cases of image changes.
+
+The one case this does *not* currently account for is when new files are added to the sprited image folder without corresponding changes to stylesheets. This should be a rare occurrence (more often then not, a new image in the sprite map will be accompanied by changes/additions to stylesheets), but in this case, you will need to forcefully bust the cache. The simplest way to do this is to have an extra option in your `spritely-map` initialization:
 
 ```scss
 $application-sprite: spritely-map('applications/*.png', $version: 1);
 ```
-
-If you have managed to figure out a more intelligent way of doing this with no input from the user, please [issue a pull request](https://github.com/agrobbin/spritely/pulls)!
 
 ### Repetition
 

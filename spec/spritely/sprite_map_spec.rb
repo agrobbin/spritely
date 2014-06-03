@@ -7,6 +7,7 @@ describe Spritely::SpriteMap do
   subject { Spritely::SpriteMap.new('test/*.png', options_hash) }
 
   before do
+    allow(Spritely).to receive_message_chain(:environment, :paths).and_return(["#{__dir__}/../fixtures"])
     allow(Spritely).to receive(:directory).and_return(File)
     allow(Spritely::Options).to receive(:new).with(options_hash).and_return(options_object)
   end
@@ -38,10 +39,7 @@ describe Spritely::SpriteMap do
   describe '#collection' do
     let(:collection) { double(find: 'find value', width: 'width value', height: 'height value', images: 'images value') }
 
-    before do
-      allow(Spritely).to receive_message_chain(:environment, :paths).and_return(["#{__dir__}/../fixtures"])
-      allow(Spritely::Collection).to receive(:create).with(["#{__dir__}/../fixtures/test/foo.png"], options_object).and_return(collection)
-    end
+    before { allow(Spritely::Collection).to receive(:create).with(["#{__dir__}/../fixtures/test/foo.png"], options_object).and_return(collection) }
 
     its(:collection) { should eq(collection) }
 
@@ -77,5 +75,10 @@ describe Spritely::SpriteMap do
 
       its(:needs_generation?) { should be_truthy }
     end
+  end
+
+  describe '#files' do
+    its('files.length') { should eq(1) }
+    its('files.first') { should match(/\.\.\/fixtures\/test\/foo\.png$/) }
   end
 end

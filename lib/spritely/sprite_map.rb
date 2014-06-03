@@ -51,8 +51,6 @@ module Spritely
       !File.exist?(filename) || Cache.busted?(filename, cache_key)
     end
 
-    private
-
     def files
       Spritely.environment.paths.flat_map { |path| Dir.glob(File.join(path, glob)) }
     end
