@@ -7,7 +7,7 @@ describe Spritely::SpriteMap do
   subject { Spritely::SpriteMap.new('test/*.png', options_hash) }
 
   before do
-    Spritely.stub(:directory).and_return(File)
+    allow(Spritely).to receive(:directory).and_return(File)
     allow(Spritely::Options).to receive(:new).with(options_hash).and_return(options_object)
   end
 
@@ -39,7 +39,7 @@ describe Spritely::SpriteMap do
     let(:collection) { double(find: 'find value', width: 'width value', height: 'height value', images: 'images value') }
 
     before do
-      Spritely.stub_chain(:environment, :paths).and_return(["#{__dir__}/../fixtures"])
+      allow(Spritely).to receive_message_chain(:environment, :paths).and_return(["#{__dir__}/../fixtures"])
       allow(Spritely::Collection).to receive(:create).with(["#{__dir__}/../fixtures/test/foo.png"], options_object).and_return(collection)
     end
 
@@ -65,7 +65,7 @@ describe Spritely::SpriteMap do
 
     before { allow(File).to receive(:exist?).with('test.png').and_return(file_exists) }
 
-    its(:needs_generation?) { should be_true }
+    its(:needs_generation?) { should be_truthy }
 
     context 'the sprite file already exists' do
       let(:file_exists) { true }
@@ -75,7 +75,7 @@ describe Spritely::SpriteMap do
         allow(Spritely::Cache).to receive(:busted?).with('test.png', 'value').and_return(true)
       end
 
-      its(:needs_generation?) { should be_true }
+      its(:needs_generation?) { should be_truthy }
     end
   end
 end
