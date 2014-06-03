@@ -37,7 +37,7 @@ This directory will be created in your deployed environments when precompiling a
 
 ## Usage
 
-### In Sass/Scss files
+### In Stylesheets
 
 ```scss
 $application-sprite: spritely-map('applications/*.png');
