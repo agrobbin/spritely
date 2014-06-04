@@ -73,15 +73,21 @@ The one case this does *not* currently account for is when new files are added t
 $application-sprite: spritely-map('applications/*.png', $version: 1);
 ```
 
-### Repetition
+### Available Options
 
-Assuming file `background.png` in `app/assets/images/application`, you can repeat the image horizontally by passing the following keyword arguments.
+There are a few different sprite map configuration options available to you. Some options are available as both global and per-image options while others are just per-image. Per-image options overwrite global options.
+
+Global options are set just like per-image ones are, except they don't have an image name prefix.
+
+#### Repetition (per-image only)
+
+You can repeat the image horizontally by passing the following keyword arguments:
 
 ```scss
 $application-sprite: spritely-map('application/*.png', $background-repeat: true);
 ```
 
-### Positioning
+#### Positioning (global and per-image)
 
 When you want to use a sprited image on the right-hand side of an element, it's useful to position that image to the absolute right of the sprite map. To do that for an image name `arrow.png`:
 
@@ -91,17 +97,7 @@ $application-sprite: spritely-map('application/*.png', $arrow-position: right);
 
 The default value is `left`.
 
-#### Global positioning
-
-You can also position all images to the right-hand side of the sprite.
-
-```scss
-$application-sprite: spritely-map('application/*.png', $position: right);
-```
-
-*Note that per-image positioning will override the global positioning option.*
-
-### Spacing
+#### Spacing (global and per-image)
 
 There are sometimes cases where you want to add some extra spacing (or padding) to a particular image in your sprite. To do so for an image named `foo.png`:
 
@@ -110,18 +106,6 @@ $application-sprite: spritely-map('application/*.png', $foo-spacing: 10px);
 ```
 
 This will add 10 pixels of padding to the bottom of `foo.png` within the sprite.
-
-#### Global spacing
-
-If you want to add space between all images in a sprite, rather than specifying `$*-spacing` keyword arguments for every image, Spritely provides a global option.
-
-```scss
-$application-sprite: spritely-map('application/*.png', $spacing: 10px);
-```
-
-This will add 10 pixels of spacing between every image in the sprite.
-
-*Note that per-image spacing options will override the global spacing option.*
 
 ## Tests
 
