@@ -23,8 +23,10 @@ module Spritely
     def options
       @options ||= stripped_hash.except(*GLOBAL_OPTIONS).inject({}) do |h, (key, value)|
         split_key = key.to_s.split('_')
-        option = global_options.merge(split_key.pop.to_sym => value)
-        h.deep_merge!(split_key.join('-') => option)
+        option = {split_key.pop.to_sym => value}
+        image = split_key.join('-')
+        h[image] ||= global_options.dup
+        h.deep_merge!(image => option)
       end
     end
 
