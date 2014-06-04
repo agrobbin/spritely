@@ -4,7 +4,7 @@ require 'active_support/core_ext/hash/slice'
 
 module Spritely
   class Options < Struct.new(:hash)
-    GLOBAL_OPTIONS = [:spacing]
+    GLOBAL_OPTIONS = [:spacing, :position]
 
     def cache_key
       stripped_hash.to_s

@@ -3,13 +3,14 @@ require 'spritely/image'
 module Spritely
   class ImageSet
     attr_accessor :top
-    attr_reader :path, :options, :data, :width, :height
+    attr_reader :path, :options, :data, :width, :height, :left
 
     def initialize(path, options)
       @path = path
       @options = options
       @data = File.read(path)
       @width, @height = data[0x10..0x18].unpack('NN')
+      @left = 0
     end
 
     def name
@@ -18,10 +19,6 @@ module Spritely
 
     def images
       @images ||= []
-    end
-
-    def left
-      0
     end
 
     def outer_height
@@ -36,6 +33,10 @@ module Spritely
       !!options[:repeat]
     end
 
+    def right?
+      options[:position] == 'right'
+    end
+
     def position_in!(collection_width)
       if repeated?
         left_position = 0
@@ -43,6 +44,8 @@ module Spritely
           add_image!(left_position)
           left_position += width
         end
+      elsif right?
+        add_image!(@left = collection_width - width)
       else
         add_image!(0)
       end

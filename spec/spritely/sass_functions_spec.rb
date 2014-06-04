@@ -42,18 +42,18 @@ describe Spritely::SassFunctions do
   end
 
   describe '#spritely_position' do
-    let(:image) { double(left: 0, top: 12) }
+    let(:image) { double(left: 10, top: 12) }
 
     subject { evaluate("spritely-position(spritely-map('test/*.png'), 'bar')") }
 
     include_examples "a sprite function that checks image existence"
 
-    it { should eq('0 -12px') }
+    it { should eq('-10px -12px') }
 
-    context 'the left is not 0' do
-      let(:image) { double(left: 10, top: 12) }
+    context 'the positions are both 0' do
+      let(:image) { double(left: 0, top: 0) }
 
-      it { should eq('10px -12px') }
+      it { should eq('0 0') }
     end
   end
 

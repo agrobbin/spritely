@@ -3,7 +3,7 @@ require 'ostruct'
 
 describe Spritely::ImageSet do
   let(:path) { "#{__dir__}/../fixtures/test/foo.png" }
-  let(:options) { {repeat: true, spacing: 10} }
+  let(:options) { {repeat: true, spacing: 10, position: 'right'} }
 
   subject { Spritely::ImageSet.new(path, options) }
 
@@ -45,6 +45,22 @@ describe Spritely::ImageSet do
     end
   end
 
+  describe '#right?' do
+    it { should be_right }
+
+    context 'position option is passed as left' do
+      let(:options) { {position: 'left'} }
+
+      it { should_not be_right }
+    end
+
+    context 'position option is not passed' do
+      let(:options) { {} }
+
+      it { should_not be_right }
+    end
+  end
+
   describe '#position_in!' do
     class ImageDouble
       attr_accessor :top, :left
@@ -66,6 +82,36 @@ describe Spritely::ImageSet do
         expect(first_image.left).to eq(0)
         expect(second_image.top).to eq(123)
         expect(second_image.left).to eq(1)
+      end
+
+      context 'it is also positioned to the right' do
+        let(:options) { {position: 'right', repeat: true} }
+
+        its(:left) { should eq(0) }
+
+        it 'should ignore the position option' do
+          expect(first_image.top).to eq(123)
+          expect(first_image.left).to eq(0)
+          expect(second_image.top).to eq(123)
+          expect(second_image.left).to eq(1)
+        end
+      end
+    end
+
+    context 'the image is positioned to the right' do
+      let(:options) { {position: 'right'} }
+      let(:image) { ImageDouble.new }
+
+      before do
+        allow(Spritely::Image).to receive(:new).with(File.read(path)).and_return(image)
+        subject.position_in!(100)
+      end
+
+      its(:left) { should eq(99) }
+
+      it 'should set the position of the image' do
+        expect(image.top).to eq(123)
+        expect(image.left).to eq(99)
       end
     end
 

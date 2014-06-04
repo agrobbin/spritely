@@ -22,7 +22,7 @@ module Spritely
     def spritely_position(sprite_map, image_name)
       image = find_image(sprite_map, image_name)
 
-      x = Sass::Script::Number.new(image.left, image.left == 0 ? [] : ['px'])
+      x = Sass::Script::Number.new(-image.left, image.left == 0 ? [] : ['px'])
       y = Sass::Script::Number.new(-image.top, image.top == 0 ? [] : ['px'])
 
       Sass::Script::List.new([x, y], :space)

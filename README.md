@@ -81,6 +81,26 @@ Assuming file `background.png` in `app/assets/images/application`, you can repea
 $application-sprite: spritely-map('application/*.png', $background-repeat: true);
 ```
 
+### Positioning
+
+When you want to use a sprited image on the right-hand side of an element, it's useful to position that image to the absolute right of the sprite map. To do that for an image name `arrow.png`:
+
+```scss
+$application-sprite: spritely-map('application/*.png', $arrow-position: right);
+```
+
+The default value is `left`.
+
+#### Global positioning
+
+You can also position all images to the right-hand side of the sprite.
+
+```scss
+$application-sprite: spritely-map('application/*.png', $position: right);
+```
+
+*Note that per-image positioning will override the global positioning option.*
+
 ### Spacing
 
 There are sometimes cases where you want to add some extra spacing (or padding) to a particular image in your sprite. To do so for an image named `foo.png`:

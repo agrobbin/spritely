@@ -18,7 +18,7 @@ describe 'Stylesheet generation', :integration do
     it { should include(<<-CSS.strip_heredoc
       #mario {
         background-image: url(/assets/sprites/application.png);
-        background-position: 0 -728px;
+        background-position: -150px -728px;
         width: 200px;
         height: 214px;
       }
