@@ -38,10 +38,10 @@ module Spritely
 
     def position_in!(collection_width)
       if repeated?
-        left = 0
-        while left < collection_width
-          add_image!(left)
-          left += width
+        left_position = 0
+        while left_position < collection_width
+          add_image!(left_position)
+          left_position += width
         end
       else
         add_image!(0)
@@ -50,10 +50,10 @@ module Spritely
 
     private
 
-    def add_image!(left)
+    def add_image!(left_position)
       images << Image.new(data).tap do |image|
         image.top = top
-        image.left = left
+        image.left = left_position
       end
     end
   end
