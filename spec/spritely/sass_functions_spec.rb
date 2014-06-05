@@ -26,7 +26,7 @@ describe Spritely::SassFunctions do
     before do
       asset_url_module = Module.new do
         def asset_url(path)
-          path
+          Sass::Script::String.new("url(#{path})")
         end
       end
       ::Sass::Script::Functions.send(:include, asset_url_module)
@@ -37,7 +37,7 @@ describe Spritely::SassFunctions do
     end
 
     it "should use Rails' built-in asset_url function" do
-      expect(evaluate("spritely-url(spritely-map('test/*.png'))")).to eq('sprites/test.png')
+      expect(evaluate("spritely-url(spritely-map('test/*.png'))")).to eq('url(sprites/test.png)')
     end
   end
 
