@@ -51,6 +51,14 @@ describe Spritely::SassFunctions do
     end
   end
 
+  describe '#spritely_background' do
+    subject { evaluate("spritely-background(spritely-map('test/*.png'), 'bar')") }
+
+    it_should_behave_like "a sprite function that checks image existence"
+
+    it { should eq('url(sprites/test.png) -10px -12px') }
+  end
+
   describe '#spritely_width' do
     subject { evaluate("spritely-width(spritely-map('test/*.png'), 'bar')") }
 

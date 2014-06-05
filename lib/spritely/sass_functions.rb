@@ -30,6 +30,12 @@ module Spritely
 
     ::Sass::Script::Functions.declare :spritely_position, [:sprite_map, :image_name]
 
+    def spritely_background(sprite_map, image_name)
+      Sass::Script::List.new([spritely_url(sprite_map), spritely_position(sprite_map, image_name)], :space)
+    end
+
+    ::Sass::Script::Functions.declare :spritely_background, [:sprite_map, :image_name]
+
     def spritely_width(sprite_map, image_name)
       image = find_image(sprite_map, image_name)
 
