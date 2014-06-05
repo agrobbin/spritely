@@ -9,10 +9,6 @@ Spritely is a very small gem that hooks into the Rails asset pipeline to allow y
 
 See the [list of releases](https://github.com/agrobbin/spritely/releases) for changes in each version.
 
-## Is this production-ready?
-
-Absolutely not. The only reason that I've released it so early is because I wanted to snag the spritely gem name on RubyGems. I will bump the version number to 0.1.0 when I am confident it can be used in production environments.
-
 ## Why should I use this?
 
 I created Spritely because of issues when attempting to use Compass' spriting. All I wanted was to have something pull in a bunch of images, and keep track of where each image is located in the sprite. Compass does a lot of great stuff, but issues when upgrading Rails to new versions (particularly 4.0 and then 4.1) kept driving me nuts, so I decided to take a shot at a small, very lightweight gem that does the minimal amount possible to sprite images for me. Spritely is that lightweight gem!
