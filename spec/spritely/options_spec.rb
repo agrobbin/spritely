@@ -14,8 +14,8 @@ describe Spritely::Options do
 
   subject(:options) { Spritely::Options.new(hash) }
 
-  its(:inspect) { should eq("#<Spritely::Options global_options=#{{spacing: 901, position: 'left'}} options=#{{'some-new-image' => {spacing: 789, position: 'right', x: 123, y: 456}, 'another-image' => {spacing: 901, position: 'left', repeat: true}, 'yet-another-image' => {spacing: 901, position: 'left', repeat: false}}}>") }
-  its(:cache_key) { should eq({some_new_image_spacing: 789, some_new_image_x: 123, some_new_image_y: 456, some_new_image_position: 'right', another_image_repeat: true, yet_another_image_repeat: false, spacing: 901, position: 'left'}.to_s) }
+  its(:inspect) { should eq("#<Spritely::Options global_options=#{{spacing: 901, position: 'left'}} options=#{{'some_new_image' => {spacing: 789, position: 'right', x: 123, y: 456}, 'another_image' => {spacing: 901, position: 'left', repeat: true}, 'yet_another_image' => {spacing: 901, position: 'left', repeat: false}}}>") }
+  its(:cache_key) { should eq({"some_new_image_spacing" => 789, "some_new_image_x" => 123, "some_new_image_y" => 456, "some_new_image_position" => 'right', "another_image_repeat" => true, "yet_another_image_repeat" => false, "spacing" => 901, "position" => 'left'}.to_s) }
 
   its(['some-new-image']) { should eq({spacing: 789, position: 'right', x: 123, y: 456}) }
   its(['another-image']) { should eq({spacing: 901, repeat: true, position: 'left'}) }
@@ -23,7 +23,7 @@ describe Spritely::Options do
 
   describe '#[]' do
     it 'should fall back to an empty hash' do
-      expect(options[:unknown]).to eq({spacing: 901, position: 'left'})
+      expect(options['unknown']).to eq({spacing: 901, position: 'left'})
     end
   end
 end
