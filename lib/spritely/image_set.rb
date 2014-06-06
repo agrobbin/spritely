@@ -1,6 +1,8 @@
 require 'spritely/image'
 
 module Spritely
+  # Each image in the sprite maps to an instance of `ImageSet` that stores the
+  # image data, width, height, and outer positioning.
   class ImageSet
     attr_accessor :top
     attr_reader :path, :options, :data, :width, :height, :left
@@ -37,6 +39,9 @@ module Spritely
       options[:position] == 'right'
     end
 
+    # When positioned in the sprite, we must take into account whether the image
+    # is configured to repeat, or is positioned to the right-hand side of the
+    # sprite map.
     def position_in!(collection_width)
       if repeated?
         left_position = 0

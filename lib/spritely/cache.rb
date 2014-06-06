@@ -1,6 +1,15 @@
 require 'digest/md5'
 
 module Spritely
+  # `Cache` is responsible for generating and fetching the current sprite cache
+  # `value. It is used to determine whether to generate a new sprite map or not.
+  #
+  # Passing in a set of objects that respond to `cache_key` will generate an MD5
+  # hash that can then be stored in the image itself.
+  #
+  # Fetching an existing cache key actually reads the PNG file itself. It scans
+  # the chunks of the PNG until it finds the `cache_key` keyword, returning the
+  # subsequent value found.
   class Cache < Struct.new(:filename)
     PNG_SIGNATURE_LENGTH = 8 # http://www.w3.org/TR/PNG/#5PNG-file-signature
     PNG_INFO_LENGTH = 8 # http://www.w3.org/TR/PNG/#5DataRep

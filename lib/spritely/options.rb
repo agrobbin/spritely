@@ -4,6 +4,23 @@ require 'active_support/core_ext/hash/keys'
 require 'active_support/core_ext/hash/slice'
 
 module Spritely
+  # Provides a simpler method of querying a particular image's options. Rather
+  # than each `Image` needing to know how to parse the keyword arguments passed
+  # into the `spritely-map` function, this simplifies and de-duplicates the
+  # passed option keys.
+  #
+  #   $application-sprite: spritely-map("application/*.png",
+  #     $arrow-repeat: true,
+  #     $arrow-spacing: 10px,
+  #     $another-image-position: right,
+  #     $spacing: 5px
+  #   );
+  #
+  # The options passed in above will be easily accessible via an instance of
+  # this class.
+  #
+  #   options['arrow'] => {repeat: true, spacing: 10}
+  #   options['another-image'] => {position: 'right', spacing: 5}
   class Options < Struct.new(:hash)
     GLOBAL_OPTIONS = ['spacing', 'position']
 
