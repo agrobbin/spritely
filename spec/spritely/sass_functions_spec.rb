@@ -1,15 +1,10 @@
 require 'spec_helper'
+require 'sprockets'
 
 describe Spritely::SassFunctions do
   class SpriteMapDouble < Sass::Script::Literal
     def name; 'test'; end
     def files; []; end
-  end
-
-  module AssetUrlModule
-    def asset_url(path)
-      Sass::Script::String.new("url(#{path})")
-    end
   end
 
   let(:sprite_map) { SpriteMapDouble.new }
@@ -20,9 +15,6 @@ describe Spritely::SassFunctions do
     allow(sprite_map).to receive(:find).with('bar').and_return(image)
   end
 
-  before(:all) { ::Sass::Script::Functions.send(:include, AssetUrlModule) }
-  after(:all) { ::Sass::Script::Functions.send(:undef_method, :asset_url) }
-
   shared_examples "a sprite function that checks image existence" do
     let(:image) { nil }
 
@@ -32,50 +24,60 @@ describe Spritely::SassFunctions do
   end
 
   describe '#spritely_url' do
-    subject { evaluate("spritely-url(spritely-map('test/*.png'))") }
+    subject { evaluate(".background-image { background-image: spritely-url(spritely-map('test/*.png')); }") }
 
-    it { should eq('url(sprites/test.png)') }
+    it { should eq(".background-image {\n  background-image: url(sprites/test.png); }\n") }
   end
 
   describe '#spritely_position' do
-    subject { evaluate("spritely-position(spritely-map('test/*.png'), 'bar')") }
+    subject { evaluate(".background-position { background-position: spritely-position(spritely-map('test/*.png'), 'bar'); }") }
 
     it_should_behave_like "a sprite function that checks image existence"
 
-    it { should eq('-10px -12px') }
+    it { should eq(".background-position {\n  background-position: -10px -12px; }\n") }
 
     context 'the positions are both 0' do
       let(:image) { double(left: 0, top: 0) }
 
-      it { should eq('0 0') }
+      it { should eq(".background-position {\n  background-position: 0 0; }\n") }
     end
   end
 
   describe '#spritely_background' do
-    subject { evaluate("spritely-background(spritely-map('test/*.png'), 'bar')") }
+    subject { evaluate(".background { background: spritely-background(spritely-map('test/*.png'), 'bar'); }") }
 
     it_should_behave_like "a sprite function that checks image existence"
 
-    it { should eq('url(sprites/test.png) -10px -12px') }
+    it { should eq(".background {\n  background: url(sprites/test.png) -10px -12px; }\n") }
   end
 
   describe '#spritely_width' do
-    subject { evaluate("spritely-width(spritely-map('test/*.png'), 'bar')") }
+    subject { evaluate(".width { width: spritely-width(spritely-map('test/*.png'), 'bar'); }") }
 
     it_should_behave_like "a sprite function that checks image existence"
 
-    it { should eq('25px') }
+    it { should eq(".width {\n  width: 25px; }\n") }
   end
 
   describe '#spritely_height' do
-    subject { evaluate("spritely-height(spritely-map('test/*.png'), 'bar')") }
+    subject { evaluate(".height { height: spritely-height(spritely-map('test/*.png'), 'bar'); }") }
 
     it_should_behave_like "a sprite function that checks image existence"
 
-    it { should eq('50px') }
+    it { should eq(".height {\n  height: 50px; }\n") }
   end
 
   def evaluate(value)
-    Sass::Script::Parser.parse(value, 0, 0).perform(Sass::Environment.new).to_s
+    Sprockets::ScssTemplate.new { value }.evaluate(environment.context_class.new(environment, nil, nil), nil)
+  end
+
+  def environment
+    @environment ||= Sprockets::Environment.new.tap do |environment|
+      environment.context_class.class_eval do
+        def asset_path(path, options = {})
+          path
+        end
+      end
+    end
   end
 end
