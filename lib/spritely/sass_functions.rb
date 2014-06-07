@@ -4,6 +4,7 @@ module Spritely
   module SassFunctions
     def spritely_map(glob, kwargs = {})
       SpriteMap.create(glob.value, kwargs).tap do |sprite_map|
+        reset_sprockets_directory_cache!
         sprite_map.files.each do |file|
           sprockets_context.depend_on(file)
           sprockets_context.depend_on_asset(file)
@@ -56,6 +57,10 @@ module Spritely
 
     def find_image(sprite_map, image_name)
       sprite_map.find(image_name.value) || raise(Sass::SyntaxError, "No image '#{image_name.value}' found in sprite map '#{sprite_map.name}'.")
+    end
+
+    def reset_sprockets_directory_cache!
+      sprockets_context.environment.send(:trail).instance_variable_get(:@entries).delete(Spritely.directory.to_s)
     end
   end
 end
