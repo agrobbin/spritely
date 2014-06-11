@@ -5,6 +5,7 @@ module Spritely
     def spritely_map(glob, kwargs = {})
       SpriteMap.create(glob.value, kwargs).tap do |sprite_map|
         reset_sprockets_directory_cache!
+        sprockets_context.depend_on(Spritely.directory)
         sprite_map.files.each do |file|
           sprockets_context.depend_on(file)
           sprockets_context.depend_on_asset(file)

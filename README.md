@@ -23,13 +23,11 @@ Add the gem to your gemfile
 gem 'spritely'
 ```
 
-Run the generator to update your gitignore
+Run the generator to create the sprites folder and update your gitignore
 
 ```bash
 bundle exec rails generate spritely:install
 ```
-
-This directory will be created in your deployed environments when precompiling assets.
 
 ## Usage
 

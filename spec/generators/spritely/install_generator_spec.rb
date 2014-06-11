@@ -12,8 +12,17 @@ describe Spritely::Generators::InstallGenerator, :generator do
   subject { destination_root }
 
   it { is_expected.to have_structure {
+    directory 'app' do
+      directory 'assets' do
+        directory 'images' do
+          directory 'sprites' do
+            file '.keep'
+          end
+        end
+      end
+    end
     file '.gitignore' do
-      contains 'app/assets/images/sprites'
+      contains 'app/assets/images/sprites/*.png'
     end
   } }
 end

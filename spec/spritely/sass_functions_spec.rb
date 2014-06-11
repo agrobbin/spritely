@@ -7,11 +7,12 @@ describe Spritely::SassFunctions do
     def files; []; end
   end
 
+  let(:directory) { __dir__ }
   let(:sprite_map) { SpriteMapDouble.new }
   let(:image) { double(left: 10, top: 12, width: 25, height: 50) }
 
   before do
-    allow(Spritely).to receive(:directory).and_return('spritely-directory')
+    allow(Spritely).to receive(:directory).and_return(directory)
     allow(Spritely::SpriteMap).to receive(:create).and_return(sprite_map)
     allow(sprite_map).to receive(:find).with('bar').and_return(image)
   end
@@ -27,7 +28,7 @@ describe Spritely::SassFunctions do
   shared_examples "a sprite function that resets the sprockets directory cache" do
     it 'should clear out the trail entries' do
       subject
-      expect(environment.send(:trail).instance_variable_get(:@entries)).to_not have_key('spritely-directory')
+      expect(environment.send(:trail).instance_variable_get(:@entries)).to_not have_key(directory)
     end
   end
 
