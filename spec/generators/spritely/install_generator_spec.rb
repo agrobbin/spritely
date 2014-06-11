@@ -22,7 +22,7 @@ describe Spritely::Generators::InstallGenerator, :generator do
       end
     end
     file '.gitignore' do
-      contains 'app/assets/images/sprites/*.png'
+      contains '/app/assets/images/sprites/*.png'
     end
   } }
 end

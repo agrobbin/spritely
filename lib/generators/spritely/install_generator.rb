@@ -10,7 +10,7 @@ module Spritely
 
       def add_sprites_folder_to_gitignore
         create_file '.gitignore', skip: true
-        inject_into_file '.gitignore', "\n#{Spritely.relative_folder_path.join('*.png')}\n", after: /\z/
+        inject_into_file '.gitignore', "\n/#{Spritely.relative_folder_path.join('*.png')}\n", after: /\z/
       end
     end
   end
