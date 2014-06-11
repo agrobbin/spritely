@@ -8,8 +8,12 @@ describe Spritely do
   end
 
   describe '.directory' do
-    before { stub_const('::Rails', double(root: File)) }
+    before { stub_const('::Rails', double(root: Pathname.new('foo/bar'))) }
 
-    its(:directory) { should eq('app/assets/images/sprites') }
+    its(:directory) { should eq(Pathname.new('foo/bar/app/assets/images/sprites')) }
+  end
+
+  describe '.relative_folder_path' do
+    its(:relative_folder_path) { should eq(Pathname.new('app/assets/images/sprites')) }
   end
 end

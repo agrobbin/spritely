@@ -8,6 +8,10 @@ module Spritely
   end
 
   def self.directory
-    ::Rails.root.join('app', 'assets', 'images', 'sprites')
+    ::Rails.root.join(relative_folder_path)
+  end
+
+  def self.relative_folder_path
+    Pathname.new(File.join('app', 'assets', 'images', 'sprites'))
   end
 end

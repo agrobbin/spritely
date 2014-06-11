@@ -23,10 +23,10 @@ Add the gem to your gemfile
 gem 'spritely'
 ```
 
-Add the following to your gitignore
+Run the generator to update your gitignore
 
-```
-app/assets/images/sprites
+```bash
+bundle exec rails generate spritely:install
 ```
 
 This directory will be created in your deployed environments when precompiling assets.

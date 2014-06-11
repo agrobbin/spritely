@@ -3,8 +3,7 @@ module RailsAppHelpers
     '--skip-active-record',
     '--skip-test-unit',
     '--skip-javascript',
-    '--skip-spring',
-    '--skip-git'
+    '--skip-spring'
   ]
 
   def within_rails_app(&block)
@@ -19,6 +18,7 @@ module RailsAppHelpers
               f.write("gem 'spritely', path: '#{__dir__}/../../'\n")
             end
             %x(bundle install)
+            %x(rails generate spritely:install)
             FileUtils.cp_r "#{__dir__}/../fixtures/rails-app/.", "."
             yield
           end
