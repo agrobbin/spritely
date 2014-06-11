@@ -18,11 +18,23 @@ shared_examples "a generator" do
   end
 
   describe '#ensure_directory_exists!' do
-    before { allow(Spritely).to receive(:directory).and_return('blah') }
+    let(:directory_exists) { true }
 
-    it 'should mkdir -p' do
-      expect(FileUtils).to receive(:mkdir_p).with('blah')
-      subject.ensure_directory_exists!
+    before do
+      allow(Spritely).to receive(:directory).and_return('blah')
+      allow(File).to receive(:exist?).with('blah').and_return(directory_exists)
+    end
+
+    it 'should not raise an exception' do
+      expect { subject.ensure_directory_exists! }.to_not raise_error
+    end
+
+    context 'the sprites folder does not exist' do
+      let(:directory_exists) { false }
+
+      it 'should raise an exception' do
+        expect { subject.ensure_directory_exists! }.to raise_error("'app/assets/images/sprites' doesn't exist. Run `rails generate spritely:install`.")
+      end
     end
   end
 end

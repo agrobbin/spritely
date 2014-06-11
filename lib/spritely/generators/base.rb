@@ -10,7 +10,7 @@ module Spritely
       end
 
       def ensure_directory_exists!
-        FileUtils.mkdir_p(Spritely.directory)
+        raise("'#{Spritely.relative_folder_path}' doesn't exist. Run `rails generate spritely:install`.") unless File.exist?(Spritely.directory)
       end
 
       def build!
