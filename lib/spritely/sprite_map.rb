@@ -52,7 +52,7 @@ module Spritely
     end
 
     def files
-      Spritely.environment.paths.flat_map { |path| Dir.glob(File.join(path, glob)) }
+      Spritely.environment.paths.flat_map { |path| Dir.glob(File.join(path, glob)) }.sort
     end
   end
 end
