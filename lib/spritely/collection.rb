@@ -58,7 +58,7 @@ module Spritely
     private
 
     def image_sets
-      @image_sets ||= files.collect { |file| ImageSet.new(file, options[File.basename(file, ".png")]) }.sort_by(&:width).reverse
+      @image_sets ||= files.collect { |file| ImageSet.new(file, options[File.basename(file, ".png")]) }
     end
 
     def heights

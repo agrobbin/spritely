@@ -13,7 +13,7 @@ describe Spritely::Collection do
 
   its(:files) { should eq(['file-1.png', 'file-2.png']) }
   its(:options) { should eq({'file-1' => {repeat: true}}) }
-  its(:images) { should eq([2, 3, 1]) }
+  its(:images) { should eq([1, 2, 3]) }
   its(:height) { should eq(110) }
 
   describe '.create' do
@@ -81,10 +81,10 @@ describe Spritely::Collection do
 
   describe '#position!' do
     it 'should call out to each image set in turn' do
-      expect(second_set).to receive(:top=).with(0)
-      expect(second_set).to receive(:position_in!).with(100)
-      expect(first_set).to receive(:top=).with(100)
+      expect(first_set).to receive(:top=).with(0)
       expect(first_set).to receive(:position_in!).with(100)
+      expect(second_set).to receive(:top=).with(10)
+      expect(second_set).to receive(:position_in!).with(100)
       subject.position!
     end
   end
