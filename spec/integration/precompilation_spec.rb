@@ -12,6 +12,7 @@ describe 'Precompilation', :integration do
     compiled_sprite = ChunkyPNG::Image.from_file(File.join('app', 'assets', 'images', 'sprites', 'application.png'))
     correct_sprite = ChunkyPNG::Image.from_file(File.join(__dir__, '..', 'fixtures', 'correct-sprite.png'))
     expect(compiled_sprite).to eq(correct_sprite)
+    expect(compiled_sprite.metadata).to eq(correct_sprite.metadata)
   end
 
   it 'should compile all of the assets necessary' do

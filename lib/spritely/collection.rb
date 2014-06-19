@@ -19,7 +19,7 @@ module Spritely
     end
 
     def cache_key
-      files.collect { |file| File.mtime(file) }.join
+      files.collect { |file| Digest::MD5.file(file) }.join
     end
 
     # Returns the width of the to-be-generated sprite image. When none of the

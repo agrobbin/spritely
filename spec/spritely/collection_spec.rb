@@ -72,11 +72,11 @@ describe Spritely::Collection do
 
   describe '#cache_key' do
     before do
-      allow(File).to receive(:mtime).with('file-1.png').and_return(10)
-      allow(File).to receive(:mtime).with('file-2.png').and_return(100)
+      allow(Digest::MD5).to receive(:file).with('file-1.png').and_return('foo')
+      allow(Digest::MD5).to receive(:file).with('file-2.png').and_return('bar')
     end
 
-    its(:cache_key) { should eq('10100') }
+    its(:cache_key) { should eq('foobar') }
   end
 
   describe '#position!' do

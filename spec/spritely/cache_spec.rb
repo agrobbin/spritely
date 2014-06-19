@@ -5,12 +5,14 @@ describe Spritely::Cache do
 
   subject { Spritely::Cache.new(filename) }
 
+  before { stub_const('Spritely::VERSION', 'foobar') }
+
   its(:filename) { should eq(filename) }
   its(:key) { should eq('527272411fe99a8b5e9da254ac0aae88') }
 
   describe '.generate' do
     it 'should collect the cache_key values and digest them' do
-      expect(Spritely::Cache.generate(double(cache_key: 'asdf'), double(cache_key: 'hjkl'))).to eq('527272411fe99a8b5e9da254ac0aae88')
+      expect(Spritely::Cache.generate(double(cache_key: 'asdf'), double(cache_key: 'hjkl'))).to eq('566ddc3d81de1f58fb37ecf29082d0f5')
     end
   end
 

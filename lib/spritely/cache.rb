@@ -16,7 +16,7 @@ module Spritely
     PNG_CRC_LENGTH = 4 # Cyclic Redundancy Check (CRC) byte-length; http://www.w3.org/TR/PNG/#5Chunk-layout
 
     def self.generate(*objects)
-      Digest::MD5.hexdigest(objects.collect(&:cache_key).join)
+      Digest::MD5.hexdigest(VERSION + objects.collect(&:cache_key).join)
     end
 
     def self.busted?(filename, expected_cache_key)

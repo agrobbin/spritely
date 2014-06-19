@@ -31,9 +31,12 @@ describe Spritely::SpriteMap do
   end
 
   describe '#cache_key' do
-    before { allow(subject).to receive(:collection).and_return(double(cache_key: 'collection value')) }
+    before do
+      allow(subject).to receive(:collection).and_return('collection value')
+      allow(Spritely::Cache).to receive(:generate).with(options_object, 'collection value').and_return('cache value')
+    end
 
-    its(:cache_key) { should eq('dfc047d12e4c6404e9dae98bc2851e5c') }
+    its(:cache_key) { should eq('cache value') }
   end
 
   describe '#collection' do
