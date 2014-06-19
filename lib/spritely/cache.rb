@@ -1,4 +1,5 @@
 require 'digest/md5'
+require 'spritely/version'
 
 module Spritely
   # `Cache` is responsible for generating and fetching the current sprite cache
