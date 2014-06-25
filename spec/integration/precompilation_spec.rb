@@ -34,4 +34,12 @@ describe 'Precompilation', :integration do
     expect(File).to exist(File.join('app', 'assets', 'images', 'sprites', 'application.png'))
     expect(File).to exist(File.join('app', 'assets', 'images', 'sprites', 'foo.png'))
   end
+
+  it 'should correctly compile a new sprite image and CSS when files change' do
+    compile_assets
+    FileUtils.cp_r "#{__dir__}/../fixtures/rails-app-changes/.", "."
+    compile_assets
+    sprite_files = Dir.glob(File.join('public', 'assets', 'sprites', 'application-*.png'))
+    expect(sprite_files.length).to eq(2)
+  end
 end
