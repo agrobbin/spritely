@@ -1,9 +1,11 @@
 require 'spec_helper'
 require 'sprockets'
+require 'ostruct'
 
 describe Spritely::SassFunctions do
   class SpriteMapDouble < Sass::Script::Literal
     def name; 'test'; end
+    def filename; 'test.png'; end
     def files; []; end
   end
 
@@ -25,17 +27,19 @@ describe Spritely::SassFunctions do
     end
   end
 
-  shared_examples "a sprite function that resets the sprockets directory cache" do
-    it 'should clear out the trail entries' do
+  shared_examples "a sprite function that resets the sprockets directory caches" do
+    it 'should clear out the trail caches' do
       subject
+      expect(environment.instance_variable_get(:@assets).length).to eq(0)
       expect(environment.send(:trail).instance_variable_get(:@entries)).to_not have_key(directory)
+      expect(environment.send(:trail).instance_variable_get(:@stats)).to_not have_key('test.png')
     end
   end
 
   describe '#spritely_url' do
     subject { evaluate(".background-image { background-image: spritely-url(spritely-map('test/*.png')); }") }
 
-    it_should_behave_like "a sprite function that resets the sprockets directory cache"
+    it_should_behave_like "a sprite function that resets the sprockets directory caches"
 
     it { should eq(".background-image {\n  background-image: url(sprites/test.png); }\n") }
   end
@@ -44,7 +48,7 @@ describe Spritely::SassFunctions do
     subject { evaluate(".background-position { background-position: spritely-position(spritely-map('test/*.png'), 'bar'); }") }
 
     it_should_behave_like "a sprite function that checks image existence"
-    it_should_behave_like "a sprite function that resets the sprockets directory cache"
+    it_should_behave_like "a sprite function that resets the sprockets directory caches"
 
     it { should eq(".background-position {\n  background-position: -10px -12px; }\n") }
 
@@ -59,7 +63,7 @@ describe Spritely::SassFunctions do
     subject { evaluate(".background { background: spritely-background(spritely-map('test/*.png'), 'bar'); }") }
 
     it_should_behave_like "a sprite function that checks image existence"
-    it_should_behave_like "a sprite function that resets the sprockets directory cache"
+    it_should_behave_like "a sprite function that resets the sprockets directory caches"
 
     it { should eq(".background {\n  background: url(sprites/test.png) -10px -12px; }\n") }
   end
@@ -68,7 +72,7 @@ describe Spritely::SassFunctions do
     subject { evaluate(".width { width: spritely-width(spritely-map('test/*.png'), 'bar'); }") }
 
     it_should_behave_like "a sprite function that checks image existence"
-    it_should_behave_like "a sprite function that resets the sprockets directory cache"
+    it_should_behave_like "a sprite function that resets the sprockets directory caches"
 
     it { should eq(".width {\n  width: 25px; }\n") }
   end
@@ -77,7 +81,7 @@ describe Spritely::SassFunctions do
     subject { evaluate(".height { height: spritely-height(spritely-map('test/*.png'), 'bar'); }") }
 
     it_should_behave_like "a sprite function that checks image existence"
-    it_should_behave_like "a sprite function that resets the sprockets directory cache"
+    it_should_behave_like "a sprite function that resets the sprockets directory caches"
 
     it { should eq(".height {\n  height: 50px; }\n") }
   end
@@ -88,7 +92,9 @@ describe Spritely::SassFunctions do
 
   def environment
     @environment ||= Sprockets::Environment.new.tap do |environment|
+      environment.instance_variable_set(:@assets, {'test' => OpenStruct.new(pathname: 'test.png')})
       environment.send(:trail).instance_variable_set(:@entries, {'spritely-directory' => 'blah'})
+      environment.send(:trail).instance_variable_set(:@stats, {'test.png' => 'blah'})
       environment.context_class.class_eval do
         def asset_path(path, options = {})
           path
