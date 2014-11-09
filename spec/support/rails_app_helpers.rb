@@ -32,6 +32,11 @@ module RailsAppHelpers
     runner "ActionView::Base; puts Rails.application.assets[#{filename.inspect}]"
   end
 
+  def spite_image_path(sprite_name)
+    fingerprint = runner(%~puts Rails.application.assets.file_digest("app/assets/images/sprites/#{sprite_name}.png")~)
+    "/assets/sprites/application-#{fingerprint.strip}.png"
+  end
+
   def compile_assets
     %x(RAILS_ENV=production rake assets:precompile)
   end
