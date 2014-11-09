@@ -27,8 +27,9 @@ module RailsAppHelpers
     end
   end
 
+  # TODO: Once support for Rails 4.0 has been dropped, this explicit call to `ActionView::Base` can be removed.
   def render_asset(filename)
-    runner "puts Rails.application.assets[#{filename.inspect}]"
+    runner "ActionView::Base; puts Rails.application.assets[#{filename.inspect}]"
   end
 
   def compile_assets
