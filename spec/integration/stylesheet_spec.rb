@@ -2,12 +2,14 @@ require 'spec_helper'
 require 'active_support/core_ext/string/strip'
 
 describe 'Stylesheet generation', :integration do
-  subject(:stylesheet) { render_asset('sprites.css') }
+  subject!(:stylesheet) { render_asset('sprites.css') }
+
+  let!(:background_image_url) { spite_image_path("application") }
 
   describe 'body CSS with repetition' do
     it { should include(<<-CSS.strip_heredoc
       body {
-        background-image: url(/assets/sprites/application.png);
+        background-image: url(#{background_image_url});
         background-position: 0 0;
       }
     CSS
@@ -17,7 +19,7 @@ describe 'Stylesheet generation', :integration do
   describe '#mario CSS with no repetition' do
     it { should include(<<-CSS.strip_heredoc
       #mario {
-        background-image: url(/assets/sprites/application.png);
+        background-image: url(#{background_image_url});
         background-position: -150px -806px;
         width: 200px;
         height: 214px;
