@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'sprockets'
 require 'ostruct'
 
-describe Spritely::SassFunctions do
+describe Spritely::SassFunctions, :sass_functions do
   class SpriteMapDouble < Sass::Script::Literal
     def name; 'test'; end
     def filename; 'test.png'; end
@@ -15,6 +15,7 @@ describe Spritely::SassFunctions do
 
   before do
     allow(Spritely).to receive(:directory).and_return(directory)
+    allow(Spritely).to receive_message_chain(:sprockets_adapter, :reset_cache!)
     allow(Spritely::SpriteMap).to receive(:create).and_return(sprite_map)
     allow(sprite_map).to receive(:find).with('bar').and_return(image)
   end
@@ -28,11 +29,10 @@ describe Spritely::SassFunctions do
   end
 
   shared_examples "a sprite function that resets the sprockets directory caches" do
-    it 'should clear out the trail caches' do
+    it 'should clear the Sprockets cache' do
       subject
-      expect(environment.instance_variable_get(:@assets).length).to eq(0)
-      expect(environment.send(:trail).instance_variable_get(:@entries)).to_not have_key(directory)
-      expect(environment.send(:trail).instance_variable_get(:@stats)).to_not have_key('test.png')
+
+      expect(Spritely.sprockets_adapter).to have_received(:reset_cache!).with(sprockets_environment, 'test.png')
     end
   end
 
@@ -84,22 +84,5 @@ describe Spritely::SassFunctions do
     it_should_behave_like "a sprite function that resets the sprockets directory caches"
 
     it { should eq(".height {\n  height: 50px; }\n") }
-  end
-
-  def evaluate(value)
-    Sprockets::ScssTemplate.new { value }.evaluate(environment.context_class.new(environment, nil, nil), nil)
-  end
-
-  def environment
-    @environment ||= Sprockets::Environment.new.tap do |environment|
-      environment.instance_variable_set(:@assets, {'test' => OpenStruct.new(pathname: 'test.png')})
-      environment.send(:trail).instance_variable_set(:@entries, {'spritely-directory' => 'blah'})
-      environment.send(:trail).instance_variable_set(:@stats, {'test.png' => 'blah'})
-      environment.context_class.class_eval do
-        def asset_path(path, options = {})
-          path
-        end
-      end
-    end
   end
 end
