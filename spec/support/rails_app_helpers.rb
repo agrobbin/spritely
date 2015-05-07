@@ -3,7 +3,8 @@ module RailsAppHelpers
     '--skip-active-record',
     '--skip-test-unit',
     '--skip-javascript',
-    '--skip-spring'
+    '--skip-spring',
+    '--skip-bundle'
   ]
 
   def within_rails_app(&block)
@@ -16,6 +17,7 @@ module RailsAppHelpers
           Bundler.with_clean_env do
             File.open('Gemfile', 'a') do |f|
               f.write("gem 'spritely', path: '#{__dir__}/../../'\n")
+              f.write("gem 'sprockets', '#{Sprockets::VERSION}'")
             end
             %x(bundle install)
             %x(rails generate spritely:install)
@@ -27,9 +29,8 @@ module RailsAppHelpers
     end
   end
 
-  # TODO: Once support for Rails 4.0 has been dropped, this explicit call to `ActionView::Base` can be removed.
   def render_asset(filename)
-    runner "ActionView::Base; puts Rails.application.assets[#{filename.inspect}]"
+    runner "puts Rails.application.assets[#{filename.inspect}]"
   end
 
   def spite_image_path(sprite_name)
