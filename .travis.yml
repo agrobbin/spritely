@@ -3,6 +3,7 @@ language: ruby
 rvm:
   - 2.0.0
   - 2.1
+  - 2.2
   - ruby-head
 gemfile:
   - gemfiles/rails_4_1.gemfile
@@ -11,5 +12,10 @@ gemfile:
 script: bundle exec rspec spec
 matrix:
   fast_finish: true
+  exclude:
+    - rvm: 2.0.0
+      gemfile: gemfiles/rails_edge.gemfile
+    - rvm: 2.1
+      gemfile: gemfiles/rails_edge.gemfile
   allow_failures:
     - gemfile: gemfiles/rails_edge.gemfile
