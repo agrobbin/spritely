@@ -75,31 +75,43 @@ Global options are set just like per-image ones are, except they don't have an i
 
 #### Repetition (per-image only)
 
-You can repeat the image horizontally by passing the following keyword arguments:
+You can repeat the image horizontally. To do so for an image named `arrow.png`:
 
 ```scss
-$application-sprite: spritely-map('application/*.png', $background-repeat: true);
+$application-sprite: spritely-map('application/*.png', $arrow-background-repeat: true);
 ```
 
 #### Positioning (global and per-image)
 
-When you want to use a sprited image on the right-hand side of an element, it's useful to position that image to the absolute right of the sprite map. To do that for an image name `arrow.png`:
+When you want to use a sprited image on the right-hand side of an element, it's useful to position that image to the absolute right of the sprite map. To do so for an image named `arrow.png`:
 
 ```scss
 $application-sprite: spritely-map('application/*.png', $arrow-position: right);
+```
+
+To do it for all images in a sprite map:
+
+```scss
+$application-sprite: spritely-map('application/*.png', $position: right);
 ```
 
 The default value is `left`.
 
 #### Spacing (global and per-image)
 
-There are sometimes cases where you want to add some extra spacing (or padding) to a particular image in your sprite. To do so for an image named `foo.png`:
+There are sometimes cases where you want to add some extra spacing (or padding) to images in your sprite. To do so for an image named `arrow.png`:
 
 ```scss
-$application-sprite: spritely-map('application/*.png', $foo-spacing: 10px);
+$application-sprite: spritely-map('application/*.png', $arrow-spacing: 10px);
 ```
 
-This will add 10 pixels of padding to the bottom of `foo.png` within the sprite.
+This will add 10 pixels of padding to the bottom of `arrow.png` within the sprite.
+
+To do it for all images in a sprite map:
+
+```scss
+$application-sprite: spritely-map('application/*.png', $spacing: 10px);
+```
 
 ## Tests
 
