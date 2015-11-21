@@ -9,11 +9,9 @@ Spritely is a very small gem that hooks into the Rails asset pipeline to allow y
 
 See the [list of releases](https://github.com/agrobbin/spritely/releases) for changes in each version.
 
-## Why should I use this?
+## How does it work?
 
-I created Spritely because of issues when attempting to use Compass' spriting. All I wanted was to have something pull in a bunch of images, and keep track of where each image is located in the sprite. Compass does a lot of great stuff, but issues when upgrading Rails to new versions (particularly 4.0 and then 4.1) kept driving me nuts, so I decided to take a shot at a small, very lightweight gem that does the minimal amount possible to sprite images for me. Spritely is that lightweight gem!
-
-I want to add that the Compass codebase helped me out tremendously while figuring out the best way to use ChunkyPNG for the PNG generation. So to everyone who has worked on Compass, thank you!
+Spritely hooks into the [Sprockets](https://github.com/rails/sprockets) compilation and caching systems. Several Sass functions are defined that are included into all other Sass scripting functions. On every request, it determines how to lay out the sprite image, and then generates the image via ChunkyPNG. If the sprite image already exists, it checks if the sprite needs to be regenerated, and only proceeds if necessary.
 
 ## Installation
 
