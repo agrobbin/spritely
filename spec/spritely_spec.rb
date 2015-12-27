@@ -2,9 +2,25 @@ require 'spec_helper'
 
 describe Spritely do
   describe '.environment' do
-    before { stub_const('::Rails', double(application: double(assets: 'assets environment'))) }
+    let(:application) { double(assets: 'assets environment') }
+
+    before { stub_const('::Rails', double(application: application)) }
 
     its(:environment) { should eq('assets environment') }
+
+    context 'sprockets-rails version 3' do
+      before { stub_const('Sprockets::Rails::VERSION', '3.0.0') }
+
+      its(:environment) { should eq('assets environment') }
+
+      context 'the Rails application assets environment is nil' do
+        let(:application) { double(assets: nil) }
+
+        before { allow(::Sprockets::Railtie).to receive(:build_environment).with(application).and_return('new assets environment') }
+
+        its(:environment) { should eq('new assets environment') }
+      end
+    end
   end
 
   describe '.directory' do
