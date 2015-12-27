@@ -11,8 +11,3 @@ end
 appraise "rails-4-2-sprockets-3" do
   gem "rails", "~> 4.2.0"
 end
-
-appraise "rails-edge" do
-  gem "rails", github: "rails/rails"
-  gem "arel", github: "rails/arel", branch: "master"
-end

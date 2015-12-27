@@ -10,14 +10,6 @@ gemfile:
   - gemfiles/rails_4_1.gemfile
   - gemfiles/rails_4_2_sprockets_2.gemfile
   - gemfiles/rails_4_2_sprockets_3.gemfile
-  - gemfiles/rails_edge.gemfile
 script: bundle exec rspec spec
 matrix:
   fast_finish: true
-  exclude:
-    - rvm: 2.0.0
-      gemfile: gemfiles/rails_edge.gemfile
-    - rvm: 2.1
-      gemfile: gemfiles/rails_edge.gemfile
-  allow_failures:
-    - gemfile: gemfiles/rails_edge.gemfile
