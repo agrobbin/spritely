@@ -1,4 +1,5 @@
 require 'sass'
+require 'sprockets/rails/version'
 require 'sprockets/version'
 require 'spritely/sass_functions'
 require 'spritely/sprockets/manifest'

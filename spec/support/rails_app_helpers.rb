@@ -17,6 +17,7 @@ module RailsAppHelpers
           Bundler.with_clean_env do
             File.open('Gemfile', 'a') do |f|
               f.write("gem 'spritely', path: '#{__dir__}/../../'\n")
+              f.write("gem 'sprockets-rails', '#{Sprockets::Rails::VERSION}'\n")
               f.write("gem 'sprockets', '#{Sprockets::VERSION}'")
             end
             %x(bundle install)
