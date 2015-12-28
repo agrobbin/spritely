@@ -25,11 +25,11 @@ module Spritely
   end
 
   def self.sprockets_version
-    Gem::Version.new(Sprockets::VERSION).segments.first
+    Gem::Version.new(::Sprockets::VERSION).segments.first
   end
 
   def self.sprockets_rails_version
-    Gem::Version.new(Sprockets::Rails::VERSION).segments.first
+    Gem::Version.new(::Sprockets::Rails::VERSION).segments.first
   end
 
   def self.sprockets_adapter
