@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'sprockets'
 require 'ostruct'
 
-describe Spritely::SassFunctions, :sass_functions do
+describe Spritely::SassFunctions do
   class SpriteMapDouble < Sass::Script::Literal
     def name; 'test'; end
     def filename; 'test.png'; end
@@ -15,7 +15,7 @@ describe Spritely::SassFunctions, :sass_functions do
 
   before do
     allow(Spritely).to receive(:directory).and_return(directory)
-    allow(Spritely).to receive_message_chain(:sprockets_adapter, :reset_cache!)
+    allow(Spritely::Sprockets::Adapter).to receive(:reset_cache!)
     allow(Spritely::SpriteMap).to receive(:create).and_return(sprite_map)
     allow(sprite_map).to receive(:find).with('bar').and_return(image)
   end
@@ -32,7 +32,7 @@ describe Spritely::SassFunctions, :sass_functions do
     it 'should clear the Sprockets cache' do
       subject
 
-      expect(Spritely.sprockets_adapter).to have_received(:reset_cache!).with(sprockets_environment, 'test.png')
+      expect(Spritely::Sprockets::Adapter).to have_received(:reset_cache!).with(sprockets_environment, 'test.png')
     end
   end
 
@@ -84,5 +84,19 @@ describe Spritely::SassFunctions, :sass_functions do
     it_should_behave_like "a sprite function that resets the sprockets directory caches"
 
     it { should eq(".height {\n  height: 50px; }\n") }
+  end
+
+  def evaluate(value)
+    Sprockets::ScssProcessor.call(environment: sprockets_environment, data: value, filename: "test.scss", metadata: {}, cache: Sprockets::Cache.new)[:data]
+  end
+
+  def sprockets_environment
+    @sprockets_environment ||= Sprockets::CachedEnvironment.new(Sprockets::Environment.new).tap do |sprockets_environment|
+      sprockets_environment.context_class.class_eval do
+        def depend_on(path); end
+        def depend_on_asset(path); end
+        def asset_path(path, options = {}); path; end
+      end
+    end
   end
 end

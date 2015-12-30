@@ -35,8 +35,7 @@ module RailsAppHelpers
   end
 
   def spite_image_path(sprite_name)
-    # TODO: When Sprockets 2.0 support is dropped (probably when Sprockets 4.0 is released), swap `digest` for `hexdigest`
-    fingerprint = runner(%~puts Rails.application.assets["sprites/#{sprite_name}.png"].digest~)
+    fingerprint = runner(%~puts Rails.application.assets["sprites/#{sprite_name}.png"].hexdigest~)
     "/assets/sprites/application-#{fingerprint.strip}.png"
   end
 

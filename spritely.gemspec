@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'activesupport', '>= 4.2'
   s.add_dependency 'chunky_png', '~> 1.3'
   s.add_dependency 'sass', '~> 3.1'
+  s.add_dependency 'sprockets', '~> 3.0'
   s.add_dependency 'sprockets-rails', '>= 2.0'
 
   s.add_development_dependency 'pry-byebug'
