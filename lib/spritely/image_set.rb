@@ -28,11 +28,11 @@ module Spritely
     end
 
     def spacing
-      options[:spacing] || 0
+      options[:spacing].to_i
     end
 
     def repeated?
-      !!options[:repeat]
+      options[:repeat] == 'true'
     end
 
     def right?

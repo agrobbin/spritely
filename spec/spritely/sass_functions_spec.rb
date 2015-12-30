@@ -1,54 +1,45 @@
 require 'spec_helper'
 require 'sprockets'
-require 'ostruct'
 
 describe Spritely::SassFunctions do
-  class SpriteMapDouble < Sass::Script::Literal
-    def name; 'test'; end
-    def filename; 'test.png'; end
-    def files; []; end
-  end
-
-  let(:directory) { __dir__ }
-  let(:sprite_map) { SpriteMapDouble.new }
+  let(:asset) { double(metadata: { sprite_directives: 'directives' }) }
+  let(:sprite_map) { double(name: 'test') }
   let(:image) { double(left: 10, top: 12, width: 25, height: 50) }
 
   before do
-    allow(Spritely).to receive(:directory).and_return(directory)
-    allow(Spritely::Sprockets::Adapter).to receive(:reset_cache!)
-    allow(Spritely::SpriteMap).to receive(:create).and_return(sprite_map)
+    allow(sprockets_environment).to receive(:find_asset).with('sprites/test.png.sprite').and_return(asset)
+    allow(Spritely::SpriteMap).to receive(:new).with('test', sprockets_environment, 'directives').and_return(sprite_map)
     allow(sprite_map).to receive(:find).with('bar').and_return(image)
   end
 
-  shared_examples "a sprite function that checks image existence" do
-    let(:image) { nil }
+  shared_examples "a sprite function that checks sprite map and image existence" do
+    context "the sprite map doesn't exist" do
+      let(:asset) { nil }
 
-    it 'should raise a nice exception' do
-      expect { subject }.to raise_error(Sass::SyntaxError, "No image 'bar' found in sprite map 'test'.")
+      it 'should raise a nice exception' do
+        expect { subject }.to raise_error(Sass::SyntaxError, "No sprite map 'test' found.")
+      end
     end
-  end
 
-  shared_examples "a sprite function that resets the sprockets directory caches" do
-    it 'should clear the Sprockets cache' do
-      subject
+    context "the image doesn't exist in the sprite map" do
+      let(:image) { nil }
 
-      expect(Spritely::Sprockets::Adapter).to have_received(:reset_cache!).with(sprockets_environment, 'test.png')
+      it 'should raise a nice exception' do
+        expect { subject }.to raise_error(Sass::SyntaxError, "No image 'bar' found in sprite map 'test'.")
+      end
     end
   end
 
   describe '#spritely_url' do
-    subject { evaluate(".background-image { background-image: spritely-url(spritely-map('test/*.png')); }") }
-
-    it_should_behave_like "a sprite function that resets the sprockets directory caches"
+    subject { evaluate(".background-image { background-image: spritely-url('test'); }") }
 
     it { should eq(".background-image {\n  background-image: url(sprites/test.png); }\n") }
   end
 
   describe '#spritely_position' do
-    subject { evaluate(".background-position { background-position: spritely-position(spritely-map('test/*.png'), 'bar'); }") }
+    subject { evaluate(".background-position { background-position: spritely-position('test', 'bar'); }") }
 
-    it_should_behave_like "a sprite function that checks image existence"
-    it_should_behave_like "a sprite function that resets the sprockets directory caches"
+    it_should_behave_like "a sprite function that checks sprite map and image existence"
 
     it { should eq(".background-position {\n  background-position: -10px -12px; }\n") }
 
@@ -60,28 +51,25 @@ describe Spritely::SassFunctions do
   end
 
   describe '#spritely_background' do
-    subject { evaluate(".background { background: spritely-background(spritely-map('test/*.png'), 'bar'); }") }
+    subject { evaluate(".background { background: spritely-background('test', 'bar'); }") }
 
-    it_should_behave_like "a sprite function that checks image existence"
-    it_should_behave_like "a sprite function that resets the sprockets directory caches"
+    it_should_behave_like "a sprite function that checks sprite map and image existence"
 
     it { should eq(".background {\n  background: url(sprites/test.png) -10px -12px; }\n") }
   end
 
   describe '#spritely_width' do
-    subject { evaluate(".width { width: spritely-width(spritely-map('test/*.png'), 'bar'); }") }
+    subject { evaluate(".width { width: spritely-width('test', 'bar'); }") }
 
-    it_should_behave_like "a sprite function that checks image existence"
-    it_should_behave_like "a sprite function that resets the sprockets directory caches"
+    it_should_behave_like "a sprite function that checks sprite map and image existence"
 
     it { should eq(".width {\n  width: 25px; }\n") }
   end
 
   describe '#spritely_height' do
-    subject { evaluate(".height { height: spritely-height(spritely-map('test/*.png'), 'bar'); }") }
+    subject { evaluate(".height { height: spritely-height('test', 'bar'); }") }
 
-    it_should_behave_like "a sprite function that checks image existence"
-    it_should_behave_like "a sprite function that resets the sprockets directory caches"
+    it_should_behave_like "a sprite function that checks sprite map and image existence"
 
     it { should eq(".height {\n  height: 50px; }\n") }
   end
@@ -93,8 +81,7 @@ describe Spritely::SassFunctions do
   def sprockets_environment
     @sprockets_environment ||= Sprockets::CachedEnvironment.new(Sprockets::Environment.new).tap do |sprockets_environment|
       sprockets_environment.context_class.class_eval do
-        def depend_on(path); end
-        def depend_on_asset(path); end
+        def link_asset(path); end
         def asset_path(path, options = {}); path; end
       end
     end

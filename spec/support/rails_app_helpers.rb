@@ -1,3 +1,6 @@
+require 'sprockets/rails/version'
+require 'sprockets/version'
+
 module RailsAppHelpers
   GENERATOR_FLAGS = [
     '--skip-active-record',
@@ -21,7 +24,6 @@ module RailsAppHelpers
               f.write("gem 'sprockets', '#{Sprockets::VERSION}'")
             end
             %x(bundle install)
-            %x(rails generate spritely:install)
             FileUtils.cp_r "#{__dir__}/../fixtures/rails-app/.", "."
             yield
           end
@@ -42,8 +44,6 @@ module RailsAppHelpers
   def compile_assets
     %x(RAILS_ENV=production rake assets:precompile)
   end
-
-  private
 
   def runner(command)
     %x(rails runner -e development '#{command}')

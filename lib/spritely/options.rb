@@ -9,50 +9,52 @@ module Spritely
   # into the `spritely-map` function, this simplifies and de-duplicates the
   # passed option keys.
   #
-  #   $application-sprite: spritely-map("application/*.png",
-  #     $arrow-repeat: true,
-  #     $arrow-spacing: 10px,
-  #     $another-image-position: right,
-  #     $spacing: 5px
-  #   );
+  #   //= repeat arrow true
+  #   //= spacing arrow 10
+  #   //= position another-image right
+  #   //= spacing 5
   #
-  # The options passed in above will be easily accessible via an instance of
+  # The directives passed in above will be easily accessible via an instance of
   # this class.
   #
   #   options['arrow'] => {repeat: true, spacing: 10}
   #   options['another-image'] => {position: 'right', spacing: 5}
-  class Options < Struct.new(:hash)
+  class Options < Struct.new(:set)
     GLOBAL_OPTIONS = ['spacing', 'position']
 
     def cache_key
-      stripped_hash.to_s
+      formatted_set.to_s
     end
 
     def inspect
       "#<Spritely::Options global_options=#{global_options} options=#{options}>"
     end
 
+    alias_method :to_s, :inspect
+
     def [](key)
-      options[key.gsub('-', '_')] || global_options
+      options[key] || global_options
     end
 
     private
 
     def options
-      @options ||= stripped_hash.except(*GLOBAL_OPTIONS).inject({}) do |h, (key, value)|
-        image, _, option = key.rpartition('_')
+      @options ||= formatted_set.except(*GLOBAL_OPTIONS).inject({}) do |h, (key, value)|
+        image, option = key.split('_')
         h[image] ||= global_options.dup
         h.deep_merge!(image => {option.to_sym => value})
       end
     end
 
     def global_options
-      @global_options ||= stripped_hash.slice(*GLOBAL_OPTIONS).symbolize_keys!
+      @global_options ||= formatted_set.slice(*GLOBAL_OPTIONS).symbolize_keys!
     end
 
-    def stripped_hash
-      @stripped_hash ||= hash.inject({}) do |h, (key, sass_object)|
-        h.merge!(key => sass_object.value)
+    def formatted_set
+      @formatted_set ||= set.inject({}) do |h, (option, image_or_value, value_or_nil)|
+        value = value_or_nil || image_or_value
+
+        h.merge!((value_or_nil ? "#{image_or_value}_#{option}" : option) => value)
       end
     end
   end

@@ -3,7 +3,7 @@ require 'ostruct'
 
 describe Spritely::ImageSet do
   let(:path) { "#{__dir__}/../fixtures/test/foo.png" }
-  let(:options) { {repeat: true, spacing: 10, position: 'right'} }
+  let(:options) { {repeat: 'true', spacing: '10', position: 'right'} }
 
   subject { Spritely::ImageSet.new(path, options) }
 
@@ -25,12 +25,6 @@ describe Spritely::ImageSet do
 
   describe '#repeated?' do
     it { should be_repeated }
-
-    context 'repeat option is passed as truthy' do
-      let(:options) { {repeat: 'repeat'} }
-
-      it { should be_repeated }
-    end
 
     context 'repeat option is passed as false' do
       let(:options) { {repeat: false} }
@@ -85,7 +79,7 @@ describe Spritely::ImageSet do
       end
 
       context 'it is also positioned to the right' do
-        let(:options) { {position: 'right', repeat: true} }
+        let(:options) { {position: 'right', repeat: 'true'} }
 
         its(:left) { should eq(0) }
 
