@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 2.0.0'
 
   s.add_dependency 'chunky_png', '~> 1.3'
-  s.add_dependency 'railties', '>= 4.1', '< 5.0'
+  s.add_dependency 'railties', '>= 4.1'
   s.add_dependency 'sass', '~> 3.1'
   s.add_dependency 'sprockets-rails', '>= 2.0'
 
