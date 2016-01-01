@@ -10,8 +10,7 @@ describe 'Stylesheet generation', :integration do
     it { should include(<<-CSS.strip_heredoc
       body {
         background-image: url(#{background_image_url});
-        background-position: 0 0;
-      }
+        background-position: 0 0; }
     CSS
     ) }
   end
@@ -22,8 +21,7 @@ describe 'Stylesheet generation', :integration do
         background-image: url(#{background_image_url});
         background-position: -150px -806px;
         width: 200px;
-        height: 214px;
-      }
+        height: 214px; }
     CSS
     ) }
   end

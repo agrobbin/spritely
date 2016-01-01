@@ -25,6 +25,3 @@ matrix:
       gemfile: gemfiles/rails_5_0_sprockets_rails_2.gemfile
     - rvm: 2.1.8
       gemfile: gemfiles/rails_5_0.gemfile
-  allow_failures:
-    - gemfile: gemfiles/rails_5_0_sprockets_rails_2.gemfile
-    - gemfile: gemfiles/rails_5_0.gemfile
