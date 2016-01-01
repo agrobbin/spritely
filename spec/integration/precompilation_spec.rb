@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'active_support/core_ext/string'
 
 describe 'Precompilation', :integration do
   it 'should create the sprite in the right location' do
