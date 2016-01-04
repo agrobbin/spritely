@@ -1,17 +1,10 @@
 require 'spec_helper'
 
 describe Spritely::SpriteMap do
-  let(:directives) { Set.new([
-    ['x', 'some-new-image', '123'],
-    ['y', 'some-new-image', '456'],
-    ['repeat', 'another-image', 'true']
-  ]) }
-  let(:options) { double(options: 'options', cache_key: 'options') }
+  let(:options) { { global: {}, images: { 'some-new-image' => { x: '123', y: '456' }, 'another-image' => { repeat: 'true' } } } }
   let(:environment) { double(paths: ["#{__dir__}/../fixtures"]) }
 
-  subject { Spritely::SpriteMap.new('test', environment, directives) }
-
-  before { allow(Spritely::Options).to receive(:new).with(directives).and_return(options) }
+  subject { Spritely::SpriteMap.new('test', environment, options) }
 
   its(:name) { should eq('test') }
   its(:glob) { should eq('test/*.png') }
@@ -20,9 +13,9 @@ describe Spritely::SpriteMap do
   its(:inspect) { should eq("#<Spritely::SpriteMap name=test options=#{options}>") }
 
   describe '#cache_key' do
-    before { allow(subject).to receive(:collection).and_return(double(cache_key: 'collection cache value')) }
+    before { allow(subject).to receive(:collection).and_return(double(to_s: 'collection cache value')) }
 
-    its(:cache_key) { should eq('5651dbf274659c40bf471ba4dc3bbd06') }
+    its(:cache_key) { should eq('d9e141f6c3f40279f579b62a201c8f72') }
   end
 
   describe '#collection' do

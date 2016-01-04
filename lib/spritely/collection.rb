@@ -21,6 +21,7 @@ module Spritely
     def cache_key
       files.collect { |file| Digest::MD5.file(file) }.join
     end
+    alias_method :to_s, :cache_key
 
     # Returns the width of the to-be-generated sprite image. When none of the
     # images repeat, it is simply the max width of all images in the sprite.
@@ -58,7 +59,7 @@ module Spritely
     private
 
     def image_sets
-      @image_sets ||= files.collect { |file| ImageSet.new(file, options[File.basename(file, ".png")]) }
+      @image_sets ||= files.collect { |file| ImageSet.new(file, options[:images][File.basename(file, ".png")] || options[:global]) }
     end
 
     def heights

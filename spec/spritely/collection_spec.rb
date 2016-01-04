@@ -4,15 +4,15 @@ describe Spritely::Collection do
   let(:first_set) { double(repeated?: true, name: 'foo', width: 1, outer_height: 10, images: [1]) }
   let(:second_set) { double(repeated?: false, name: 'bar', width: 100, outer_height: 100, images: [2, 3]) }
 
-  subject { Spritely::Collection.new(['file-1.png', 'file-2.png'], {'file-1' => {repeat: true}}) }
+  subject { Spritely::Collection.new(['file-1.png', 'file-2.png'], { global: { spacing: '5' }, images: { 'file-1' => { repeat: 'true' } } }) }
 
   before do
-    allow(Spritely::ImageSet).to receive(:new).with('file-1.png', repeat: true).and_return(first_set)
-    allow(Spritely::ImageSet).to receive(:new).with('file-2.png', nil).and_return(second_set)
+    allow(Spritely::ImageSet).to receive(:new).with('file-1.png', repeat: 'true').and_return(first_set)
+    allow(Spritely::ImageSet).to receive(:new).with('file-2.png', spacing: '5').and_return(second_set)
   end
 
   its(:files) { should eq(['file-1.png', 'file-2.png']) }
-  its(:options) { should eq({'file-1' => {repeat: true}}) }
+  its(:options) { should eq({ global: { spacing: '5' }, images: { 'file-1' => { repeat: 'true' } } }) }
   its(:images) { should eq([1, 2, 3]) }
   its(:height) { should eq(110) }
 
@@ -29,12 +29,12 @@ describe Spritely::Collection do
   describe '#width' do
     let(:third_set) { double(repeated?: false, width: 65, height: 100) }
 
-    subject { Spritely::Collection.new(['file-1.png', 'file-2.png', 'file-3.png'], {}) }
+    subject { Spritely::Collection.new(['file-1.png', 'file-2.png', 'file-3.png'], { global: {}, images: {} }) }
 
     before do
-      allow(Spritely::ImageSet).to receive(:new).with('file-1.png', nil).and_return(first_set)
-      allow(Spritely::ImageSet).to receive(:new).with('file-2.png', nil).and_return(second_set)
-      allow(Spritely::ImageSet).to receive(:new).with('file-3.png', nil).and_return(third_set)
+      allow(Spritely::ImageSet).to receive(:new).with('file-1.png', {}).and_return(first_set)
+      allow(Spritely::ImageSet).to receive(:new).with('file-2.png', {}).and_return(second_set)
+      allow(Spritely::ImageSet).to receive(:new).with('file-3.png', {}).and_return(third_set)
     end
 
     its(:width) { should eq(100) }
@@ -77,6 +77,7 @@ describe Spritely::Collection do
     end
 
     its(:cache_key) { should eq('foobar') }
+    its(:to_s) { should eq('foobar') }
   end
 
   describe '#position!' do

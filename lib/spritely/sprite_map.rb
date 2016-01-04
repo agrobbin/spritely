@@ -1,6 +1,5 @@
 require 'forwardable'
 require 'digest/md5'
-require 'spritely/options'
 require 'spritely/collection'
 require 'spritely/generators/chunky_png'
 
@@ -12,11 +11,11 @@ module Spritely
 
     attr_reader :name, :glob, :environment, :options
 
-    def initialize(name, environment, directives)
+    def initialize(name, environment, options)
       @name = name
       @glob = [name, "*.png"].join("/")
       @environment = environment
-      @options = Options.new(directives)
+      @options = options
     end
 
     def inspect
@@ -24,7 +23,7 @@ module Spritely
     end
 
     def cache_key
-      @cache_key ||= Digest::MD5.hexdigest([options, collection].collect(&:cache_key).join)
+      @cache_key ||= Digest::MD5.hexdigest([options, collection].join)
     end
 
     def collection
