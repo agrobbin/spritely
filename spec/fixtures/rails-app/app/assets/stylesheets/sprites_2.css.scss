@@ -1,8 +1,6 @@
-$foo-sprite: spritely-map("foo/*.png", $spacing: 5px);
-
 #foo {
-  background-image: spritely-url($foo-sprite);
-  background-position: spritely-position($foo-sprite, "fool");
-  width: spritely-width($foo-sprite, "fool");
-  height: spritely-height($foo-sprite, "fool");
+  background-image: spritely-url("foo");
+  background-position: spritely-position("foo", "fool");
+  width: spritely-width("foo", "fool");
+  height: spritely-height("foo", "fool");
 }

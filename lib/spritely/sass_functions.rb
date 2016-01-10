@@ -1,29 +1,17 @@
-require 'spritely/sprite_map'
-require 'spritely/sprockets/adapter'
+require 'sass'
 
 module Spritely
   module SassFunctions
-    def spritely_map(glob, kwargs = {})
-      SpriteMap.create(glob.value, kwargs).tap do |sprite_map|
-        Spritely::Sprockets::Adapter.reset_cache!(sprockets_environment, sprite_map.filename)
-        sprockets_context.depend_on(Spritely.directory)
-        sprite_map.files.each do |file|
-          sprockets_context.depend_on(file)
-          sprockets_context.depend_on_asset(file)
-        end
-      end
+    def spritely_url(sprite_name)
+      sprockets_context.link_asset("sprites/#{sprite_name.value}.png")
+
+      asset_url(Sass::Script::String.new("sprites/#{sprite_name.value}.png"))
     end
 
-    ::Sass::Script::Functions.declare :spritely_map, [:glob], var_kwargs: true
+    ::Sass::Script::Functions.declare :spritely_url, [:sprite_name]
 
-    def spritely_url(sprite_map)
-      asset_url(Sass::Script::String.new("sprites/#{sprite_map.name}.png"))
-    end
-
-    ::Sass::Script::Functions.declare :spritely_url, [:sprite_map]
-
-    def spritely_position(sprite_map, image_name)
-      image = find_image(sprite_map, image_name)
+    def spritely_position(sprite_name, image_name)
+      image = find_image(sprite_name, image_name)
 
       x = Sass::Script::Number.new(-image.left, image.left == 0 ? [] : ['px'])
       y = Sass::Script::Number.new(-image.top, image.top == 0 ? [] : ['px'])
@@ -31,34 +19,46 @@ module Spritely
       Sass::Script::List.new([x, y], :space)
     end
 
-    ::Sass::Script::Functions.declare :spritely_position, [:sprite_map, :image_name]
+    ::Sass::Script::Functions.declare :spritely_position, [:sprite_name, :image_name]
 
-    def spritely_background(sprite_map, image_name)
-      Sass::Script::List.new([spritely_url(sprite_map), spritely_position(sprite_map, image_name)], :space)
+    def spritely_background(sprite_name, image_name)
+      Sass::Script::List.new([spritely_url(sprite_name), spritely_position(sprite_name, image_name)], :space)
     end
 
-    ::Sass::Script::Functions.declare :spritely_background, [:sprite_map, :image_name]
+    ::Sass::Script::Functions.declare :spritely_background, [:sprite_name, :image_name]
 
-    def spritely_width(sprite_map, image_name)
-      image = find_image(sprite_map, image_name)
+    def spritely_width(sprite_name, image_name)
+      image = find_image(sprite_name, image_name)
 
       Sass::Script::Number.new(image.width, ['px'])
     end
 
-    ::Sass::Script::Functions.declare :spritely_width, [:sprite_map, :image_name]
+    ::Sass::Script::Functions.declare :spritely_width, [:sprite_name, :image_name]
 
-    def spritely_height(sprite_map, image_name)
-      image = find_image(sprite_map, image_name)
+    def spritely_height(sprite_name, image_name)
+      image = find_image(sprite_name, image_name)
 
       Sass::Script::Number.new(image.height, ['px'])
     end
 
-    ::Sass::Script::Functions.declare :spritely_height, [:sprite_map, :image_name]
+    ::Sass::Script::Functions.declare :spritely_height, [:sprite_name, :image_name]
 
     private
 
-    def find_image(sprite_map, image_name)
+    def find_image(sprite_name, image_name)
+      sprockets_context.link_asset("sprites/#{sprite_name.value}.png")
+
+      sprite_map = sprite_maps.fetch(sprite_name.value) do |name|
+        asset = sprockets_environment.find_asset("sprites/#{name}.png.sprite") || raise(Sass::SyntaxError, "No sprite map '#{name}' found.")
+
+        sprite_maps[name] = SpriteMap.new(name, sprockets_environment, asset.metadata[:sprite_directives])
+      end
+
       sprite_map.find(image_name.value) || raise(Sass::SyntaxError, "No image '#{image_name.value}' found in sprite map '#{sprite_map.name}'.")
+    end
+
+    def sprite_maps
+      @sprite_maps ||= {}
     end
   end
 end

@@ -9,11 +9,8 @@ module Spritely
           png = ::ChunkyPNG::Image.from_blob(image.data)
           canvas.replace!(png, image.left, image.top)
         end
-      end
 
-      def save!
-        canvas.metadata['cache_key'] = sprite_map.cache_key
-        canvas.save(sprite_map.filename, :fast_rgba)
+        canvas.to_blob(:fast_rgba)
       end
 
       private

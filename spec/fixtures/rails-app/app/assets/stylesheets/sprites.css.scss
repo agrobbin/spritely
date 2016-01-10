@@ -1,19 +1,11 @@
-$application-sprite: spritely-map("application/*.png",
-  $background-repeat: true,
-  $football-spacing: 100px,
-  $mario-spacing: 10px,
-  $mario-position: right,
-  $spacing: 5px
-);
-
 body {
-  background-image: spritely-url($application-sprite);
-  background-position: spritely-position($application-sprite, "background");
+  background-image: spritely-url("application");
+  background-position: spritely-position("application", "background");
 }
 
 #mario {
-  background-image: spritely-url($application-sprite);
-  background-position: spritely-position($application-sprite, "mario");
-  width: spritely-width($application-sprite, "mario");
-  height: spritely-height($application-sprite, "mario");
+  background-image: spritely-url("application");
+  background-position: spritely-position("application", "mario");
+  width: spritely-width("application", "mario");
+  height: spritely-height("application", "mario");
 }

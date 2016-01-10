@@ -1,6 +1,5 @@
 require 'rspec'
 require 'rspec/its'
-require 'generator_spec/generator_example_group'
 require 'spritely'
 
 require 'pry-byebug'
@@ -13,6 +12,5 @@ RSpec.configure do |config|
   end
 
   config.include RailsAppHelpers, :integration
-  config.include GeneratorSpec::GeneratorExampleGroup, :generator
   config.around(:each, :integration) { |example| within_rails_app(&example) }
 end

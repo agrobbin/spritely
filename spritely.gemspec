@@ -11,24 +11,23 @@ Gem::Specification.new do |s|
   s.email       = ["alex@robbinsweb.biz"]
   s.homepage    = "https://github.com/agrobbin/spritely"
   s.license     = "MIT"
-  s.summary     = "Hooks into the Rails asset pipeline to allow you to easily generate sprite maps"
+  s.summary     = "Hooks into the Sprockets asset packaging system to allow you to easily generate sprite maps"
 
   s.files = Dir["lib/**/*"]
   s.test_files = Dir["spec/**/*"]
 
   s.required_ruby_version = '>= 2.0.0'
 
-  s.add_dependency 'activesupport', '>= 4.2'
   s.add_dependency 'chunky_png', '~> 1.3'
   s.add_dependency 'sass', '~> 3.1'
   s.add_dependency 'sprockets', '~> 3.0'
-  s.add_dependency 'sprockets-rails', '>= 2.0'
 
+  s.add_development_dependency 'activesupport'
   s.add_development_dependency 'pry-byebug'
+  s.add_development_dependency 'sprockets-rails'
   s.add_development_dependency 'railties'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec', '>= 3.0'
   s.add_development_dependency 'rspec-its'
   s.add_development_dependency 'appraisal'
-  s.add_development_dependency 'generator_spec'
 end

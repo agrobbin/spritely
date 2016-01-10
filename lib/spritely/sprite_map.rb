@@ -1,58 +1,41 @@
 require 'forwardable'
-require 'spritely/options'
-require 'spritely/cache'
+require 'digest/md5'
 require 'spritely/collection'
 require 'spritely/generators/chunky_png'
 
 module Spritely
-  class SpriteMap < Sass::Script::Literal
+  class SpriteMap
     extend Forwardable
 
     def_delegators :collection, :find, :width, :height, :images
 
-    attr_reader :glob, :options
+    attr_reader :name, :glob, :environment, :options
 
-    def self.create(*args)
-      new(*args).tap do |sprite_map|
-        sprite_map.generate! if sprite_map.needs_generation?
-      end
-    end
-
-    def initialize(glob, options = {})
-      @glob = glob
-      @options = Options.new(options)
-    end
-
-    def cache_key
-      @cache_key ||= Cache.generate(options, collection)
+    def initialize(name, environment, options)
+      @name = name
+      @glob = [name, "*.png"].join("/")
+      @environment = environment
+      @options = options
     end
 
     def inspect
       "#<Spritely::SpriteMap name=#{name} options=#{options}>"
     end
 
+    def cache_key
+      @cache_key ||= Digest::MD5.hexdigest([options, collection].join)
+    end
+
     def collection
       @collection ||= Collection.create(files, options)
     end
 
-    def generate!
-      Generators::ChunkyPng.create!(self)
-    end
-
-    def name
-      glob.split('/')[0..-2].join('-')
-    end
-
-    def filename
-      Spritely.directory.join("#{name}.png")
-    end
-
-    def needs_generation?
-      !File.exist?(filename) || Cache.busted?(filename, cache_key)
+    def save!
+      Generators::ChunkyPng.new(self).build!
     end
 
     def files
-      Spritely.environment.paths.flat_map { |path| Dir.glob(File.join(path, glob)) }.sort
+      environment.paths.flat_map { |path| Dir.glob(File.join(path, glob)) }.sort
     end
   end
 end
