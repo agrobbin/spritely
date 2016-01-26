@@ -1,0 +1,8 @@
+@mixin spritely-image($sprite_name, $image) {
+  background: {
+    image: spritely-url($sprite_name);
+    position: spritely-position($sprite_name, $image);
+  }
+  width: spritely-width($sprite_name, $image);
+  height: spritely-height($sprite_name, $image);
+}
