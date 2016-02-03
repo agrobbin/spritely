@@ -29,14 +29,11 @@ Spritely takes advantage of Sprockets directives to define how a sprite should b
 
 ### Stylesheet
 
+If you aren't doing anything special, you can use a Spritely-provided Sass mixin:
+
 ```scss
 #icon {
-  background: {
-    image: spritely-url("application");
-    position: spritely-position("application", "icon");
-  }
-  width: spritely-width("application", "icon");
-  height: spritely-height("application", "icon");
+  @include spritely-image("application", "icon");
 }
 ```
 
@@ -48,6 +45,26 @@ The compiled CSS should look something like this:
   background-position: 0 25px;
   width: 20px;
   height: 20px;
+}
+```
+
+Otherwise, you can use the Spritely Sass functions directly:
+
+```scss
+#icon {
+  background: {
+    image: spritely-url("application");
+    position: spritely-position("application", "icon");
+  }
+}
+```
+
+The compiled CSS should look something like this:
+
+```css
+#icon {
+  background-image: url(/assets/sprites/application.png);
+  background-position: 0 25px;
 }
 ```
 

@@ -3,6 +3,10 @@ require 'spritely/sass_functions'
 require 'spritely/sprockets/preprocessor'
 require 'spritely/sprockets/transformer'
 
+if defined?(::Rails::Engine)
+  require 'spritely/engine'
+end
+
 module Spritely
 end
 
