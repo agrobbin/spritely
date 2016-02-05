@@ -30,17 +30,13 @@ module Spritely
     # multiple is then multiplied by the minimum multiple that will result in a
     # value greater than or equal to the max width of all images in the sprite.
     def width
-      return @width if @width
-
-      max_width = image_sets.collect(&:width).max
-      if image_sets.none?(&:repeated?)
-        @width = max_width
+      @width ||= if image_sets.none?(&:repeated?)
+        max_width
       else
-        @width = lcm = image_sets.select(&:repeated?).collect(&:width).reduce(:lcm)
-        @width += lcm while @width < max_width
-      end
+        lcm = image_sets.select(&:repeated?).collect(&:width).reduce(:lcm)
 
-      @width
+        lcm * (max_width / lcm.to_f).ceil
+      end
     end
 
     def height
@@ -62,8 +58,12 @@ module Spritely
       @image_sets ||= files.collect { |file| ImageSet.new(file, options[:images][File.basename(file, ".png")] || options[:global]) }
     end
 
+    def max_width
+      @max_width ||= image_sets.collect(&:width).max
+    end
+
     def heights
-      image_sets.collect(&:outer_height)
+      @heights ||= image_sets.collect(&:outer_height)
     end
   end
 end
