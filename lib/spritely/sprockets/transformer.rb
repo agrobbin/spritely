@@ -13,8 +13,6 @@ module Spritely
       end
 
       def call
-        sprite_map = SpriteMap.new(input[:name].remove("sprites/"), input[:environment], input[:metadata][:sprite_directives])
-
         data = cache.fetch([self.class.cache_key, input[:name], sprite_map.cache_key]) do
           sprite_map.files.each do |file|
             context.depend_on(File.dirname(file))
@@ -35,6 +33,10 @@ module Spritely
 
       def cache
         @cache ||= input[:cache]
+      end
+
+      def sprite_map
+        @sprite_map ||= SpriteMap.new(input[:name].remove("sprites/"), input[:environment], input[:metadata][:sprite_directives])
       end
     end
   end
