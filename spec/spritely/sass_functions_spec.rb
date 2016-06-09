@@ -3,7 +3,7 @@ require 'sprockets'
 
 describe Spritely::SassFunctions do
   let(:asset) { double(metadata: { sprite_directives: 'directives' }) }
-  let(:sprite_map) { double(name: 'test') }
+  let(:sprite_map) { double(name: 'test', width: 100, height: 200) }
   let(:image) { double(left: 10, top: 12, width: 25, height: 50) }
 
   before do
@@ -12,7 +12,7 @@ describe Spritely::SassFunctions do
     allow(sprite_map).to receive(:find).with('bar').and_return(image)
   end
 
-  shared_examples "a sprite function that checks sprite map and image existence" do
+  shared_examples "a sprite function that checks sprite map existence" do
     context "the sprite map doesn't exist" do
       let(:asset) { nil }
 
@@ -20,6 +20,10 @@ describe Spritely::SassFunctions do
         expect { subject }.to raise_error(Sass::SyntaxError, "No sprite map 'test' found.")
       end
     end
+  end
+
+  shared_examples "a sprite function that checks sprite map and image existence" do
+    it_should_behave_like "a sprite function that checks sprite map existence"
 
     context "the image doesn't exist in the sprite map" do
       let(:image) { nil }
@@ -59,19 +63,39 @@ describe Spritely::SassFunctions do
   end
 
   describe '#spritely_width' do
-    subject { evaluate(".width { width: spritely-width('test', 'bar'); }") }
+    describe "image width" do
+      subject { evaluate(".width { width: spritely-width('test', 'bar'); }") }
 
-    it_should_behave_like "a sprite function that checks sprite map and image existence"
+      it_should_behave_like "a sprite function that checks sprite map and image existence"
 
-    it { should eq(".width {\n  width: 25px; }\n") }
+      it { should eq(".width {\n  width: 25px; }\n") }
+    end
+
+    describe "sprite width" do
+      subject { evaluate(".width { width: spritely-width('test'); }") }
+
+      it_should_behave_like "a sprite function that checks sprite map existence"
+
+      it { should eq(".width {\n  width: 100px; }\n") }
+    end
   end
 
   describe '#spritely_height' do
-    subject { evaluate(".height { height: spritely-height('test', 'bar'); }") }
+    describe "image width" do
+      subject { evaluate(".height { height: spritely-height('test', 'bar'); }") }
 
-    it_should_behave_like "a sprite function that checks sprite map and image existence"
+      it_should_behave_like "a sprite function that checks sprite map and image existence"
 
-    it { should eq(".height {\n  height: 50px; }\n") }
+      it { should eq(".height {\n  height: 50px; }\n") }
+    end
+
+    describe "sprite width" do
+      subject { evaluate(".height { height: spritely-height('test'); }") }
+
+      it_should_behave_like "a sprite function that checks sprite map existence"
+
+      it { should eq(".height {\n  height: 200px; }\n") }
+    end
   end
 
   def evaluate(value)
