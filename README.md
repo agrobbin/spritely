@@ -118,6 +118,14 @@ To do it for all images in a sprite map:
 //= spacing 10
 ```
 
+#### Directory (global only)
+
+If you have sprite images that are stored in a different location than the default (`app/assets/images/[sprite-name]`), you can override the directory that Spritely looks for images to sprite. To do so when a sprite's images are stored in `app/assets/images/foo/bar`:
+
+```
+//= directory foo/bar
+```
+
 ## Tests
 
 ```bash

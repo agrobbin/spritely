@@ -14,6 +14,7 @@ describe Spritely::Sprockets::Preprocessor do
     preprocessor._call(input)
 
     expect(input[:metadata][:sprite_directives]).to eq(
+      directory: nil,
       global: { spacing: '901', position: 'left' },
       images: {
         "some-new-image" => { spacing: '789', position: 'right' },
@@ -21,6 +22,25 @@ describe Spritely::Sprockets::Preprocessor do
         "yet-another-image" => { repeat: 'false', spacing: '901', position: 'left' }
       }
     )
+  end
+
+  describe 'overriding the directory' do
+    let(:data) { "//= directory foo/sprites" }
+    let(:input) { {
+      data: data,
+      filename: "sprites/foo.png.sprite",
+      metadata: {}
+    } }
+
+    it 'saves the processed options as part of the metadata' do
+      preprocessor._call(input)
+
+      expect(input[:metadata][:sprite_directives]).to eq(
+        directory: 'foo/sprites',
+        global: {},
+        images: {}
+      )
+    end
   end
 
   describe 'invalid global option' do
