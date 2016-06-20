@@ -1,16 +1,25 @@
 require 'spec_helper'
+require 'active_support/core_ext/hash/except'
 
 describe Spritely::SpriteMap do
-  let(:options) { { global: {}, images: { 'some-new-image' => { x: '123', y: '456' }, 'another-image' => { repeat: 'true' } } } }
+  let(:directory) { nil }
+  let(:options) { { directory: directory, global: {}, images: { 'some-new-image' => { x: '123', y: '456' }, 'another-image' => { repeat: 'true' } } } }
   let(:environment) { double(paths: ["#{__dir__}/../fixtures"]) }
 
   subject { Spritely::SpriteMap.new('test', environment, options) }
 
   its(:name) { should eq('test') }
-  its(:glob) { should eq('test/*.png') }
   its(:environment) { should eq(environment) }
-  its(:options) { should eq(options) }
-  its(:inspect) { should eq("#<Spritely::SpriteMap name=test options=#{options}>") }
+  its(:options) { should eq(options.except(:directory)) }
+  its(:directory) { should eq('test') }
+  its(:glob) { should eq('test/*.png') }
+  its(:inspect) { should eq("#<Spritely::SpriteMap name=test directory=test options=#{options.except(:directory)}>") }
+
+  context 'the directory is set' do
+    let(:directory) { 'test/sprite-images' }
+
+    its(:directory) { should eq('test/sprite-images') }
+  end
 
   describe '#cache_key' do
     before { allow(subject).to receive(:collection).and_return(double(to_s: 'collection cache value')) }
@@ -21,7 +30,7 @@ describe Spritely::SpriteMap do
   describe '#collection' do
     let(:collection) { double(find: 'find value', width: 'width value', height: 'height value', images: 'images value') }
 
-    before { allow(Spritely::Collection).to receive(:create).with(["#{__dir__}/../fixtures/test/foo.png"], options).and_return(collection) }
+    before { allow(Spritely::Collection).to receive(:create).with(["#{__dir__}/../fixtures/test/foo.png"], options.except(:directory)).and_return(collection) }
 
     its(:collection) { should eq(collection) }
 

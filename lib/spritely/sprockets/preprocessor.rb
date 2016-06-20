@@ -4,6 +4,7 @@ module Spritely
   module Sprockets
     # Converts Sprockets directives from this:
     #
+    #   //= directory foo/bar
     #   //= repeat arrow true
     #   //= spacing arrow 10
     #   //= position another-image right
@@ -12,6 +13,7 @@ module Spritely
     # To this:
     #
     #   {
+    #     directory: 'foo/bar',
     #     global: { spacing: 5 },
     #     images: {
     #       'arrow' => { repeat: 'true', spacing: '10' },
@@ -23,13 +25,17 @@ module Spritely
       IMAGE_DIRECTIVES = %w(repeat position spacing).freeze
 
       def _call(input)
-        @sprite_directives = { global: {}, images: {} }
+        @sprite_directives = { directory: nil, global: {}, images: {} }
 
         super.tap do
           merge_global_options!
 
           input[:metadata][:sprite_directives] = @sprite_directives
         end
+      end
+
+      def process_directory_directive(value)
+        @sprite_directives[:directory] = value
       end
 
       (GLOBAL_DIRECTIVES + IMAGE_DIRECTIVES).uniq.each do |directive|
