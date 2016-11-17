@@ -72,12 +72,14 @@ describe Spritely::Collection do
 
   describe '#cache_key' do
     before do
-      allow(Digest::MD5).to receive(:file).with('file-1.png').and_return('foo')
-      allow(Digest::MD5).to receive(:file).with('file-2.png').and_return('bar')
+      allow(Digest::MD5).to receive(:hexdigest).with('file-1.png').and_return('foo1')
+      allow(Digest::MD5).to receive(:hexdigest).with('file-2.png').and_return('bar1')
+      allow(Digest::MD5).to receive(:file).with('file-1.png').and_return('foo2')
+      allow(Digest::MD5).to receive(:file).with('file-2.png').and_return('bar2')
     end
 
-    its(:cache_key) { should eq('foobar') }
-    its(:to_s) { should eq('foobar') }
+    its(:cache_key) { should eq('foo1foo2bar1bar2') }
+    its(:to_s) { should eq('foo1foo2bar1bar2') }
   end
 
   describe '#position!' do

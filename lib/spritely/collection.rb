@@ -19,7 +19,7 @@ module Spritely
     end
 
     def cache_key
-      files.collect { |file| Digest::MD5.file(file) }.join
+      files.flat_map { |file_path| [Digest::MD5.hexdigest(file_path), Digest::MD5.file(file_path)] }.join
     end
     alias_method :to_s, :cache_key
 
