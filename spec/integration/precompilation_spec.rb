@@ -43,4 +43,26 @@ describe 'Precompilation', :integration do
     sprite_files = Dir.glob(File.join('public', 'assets', 'sprites', 'application-*.png'))
     expect(sprite_files.length).to eq(2)
   end
+
+  context 'a file is renamed multiple times' do
+    before do
+      compile_assets
+      FileUtils.mv 'app/assets/images/application/fool.png', 'app/assets/images/application/ffool.png'
+      compile_assets
+      FileUtils.mv 'app/assets/images/application/ffool.png', 'app/assets/images/application/afool.png'
+      compile_assets
+    end
+
+    it 'should end up with 2 different versions of the sprite' do
+      sprite_files = Dir.glob(File.join('public', 'assets', 'sprites', 'application-*.png'))
+      expect(sprite_files.length).to eq(2)
+    end
+
+    it 'should generate the correct sprite after all of the file-moving' do
+      runner %~Rails.application.assets["sprites/application.png"].write_to("compiled-sprite.png")~
+      compiled_sprite = ChunkyPNG::Image.from_file('compiled-sprite.png')
+      correct_sprite = ChunkyPNG::Image.from_file(File.join(__dir__, '..', 'fixtures', 'correct-renamed-sprite.png'))
+      expect(compiled_sprite).to eq(correct_sprite)
+    end
+  end
 end
