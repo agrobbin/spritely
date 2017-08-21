@@ -5,7 +5,7 @@ module Spritely
     def spritely_url(sprite_name)
       sprockets_context.link_asset("sprites/#{sprite_name.value}.png")
 
-      asset_url(Sass::Script::String.new("sprites/#{sprite_name.value}.png"))
+      asset_url(Sass::Script::Value::String.new("sprites/#{sprite_name.value}.png"))
     end
 
     ::Sass::Script::Functions.declare :spritely_url, [:sprite_name]
@@ -13,16 +13,16 @@ module Spritely
     def spritely_position(sprite_name, image_name)
       image = find_image(sprite_name, image_name)
 
-      x = Sass::Script::Number.new(-image.left, image.left == 0 ? [] : ['px'])
-      y = Sass::Script::Number.new(-image.top, image.top == 0 ? [] : ['px'])
+      x = Sass::Script::Value::Number.new(-image.left, image.left == 0 ? [] : ['px'])
+      y = Sass::Script::Value::Number.new(-image.top, image.top == 0 ? [] : ['px'])
 
-      Sass::Script::List.new([x, y], :space)
+      Sass::Script::Value::List.new([x, y], :space)
     end
 
     ::Sass::Script::Functions.declare :spritely_position, [:sprite_name, :image_name]
 
     def spritely_background(sprite_name, image_name)
-      Sass::Script::List.new([spritely_url(sprite_name), spritely_position(sprite_name, image_name)], :space)
+      Sass::Script::Value::List.new([spritely_url(sprite_name), spritely_position(sprite_name, image_name)], :space)
     end
 
     ::Sass::Script::Functions.declare :spritely_background, [:sprite_name, :image_name]
@@ -34,7 +34,7 @@ module Spritely
         find_sprite_map(sprite_name)
       end
 
-      Sass::Script::Number.new(image.width, ['px'])
+      Sass::Script::Value::Number.new(image.width, ['px'])
     end
 
     ::Sass::Script::Functions.declare :spritely_width, [:sprite_name, :image_name]
@@ -46,7 +46,7 @@ module Spritely
         find_sprite_map(sprite_name)
       end
 
-      Sass::Script::Number.new(image.height, ['px'])
+      Sass::Script::Value::Number.new(image.height, ['px'])
     end
 
     ::Sass::Script::Functions.declare :spritely_height, [:sprite_name, :image_name]
