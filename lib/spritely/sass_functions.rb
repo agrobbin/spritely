@@ -5,7 +5,7 @@ module Spritely
     def spritely_url(sprite_name)
       sprockets_context.link_asset("sprites/#{sprite_name.value}.png")
 
-      asset_url(Sass::Script::String.new("sprites/#{sprite_name.value}.png"))
+      asset_url(Sass::Script::Value::String.new("sprites/#{sprite_name.value}.png"))
     end
 
     ::Sass::Script::Functions.declare :spritely_url, [:sprite_name]
@@ -13,16 +13,16 @@ module Spritely
     def spritely_position(sprite_name, image_name)
       image = find_image(sprite_name, image_name)
 
-      x = Sass::Script::Number.new(-image.left, image.left == 0 ? [] : ['px'])
-      y = Sass::Script::Number.new(-image.top, image.top == 0 ? [] : ['px'])
+      x = Sass::Script::Value::Number.new(-image.left, image.left == 0 ? [] : ['px'])
+      y = Sass::Script::Value::Number.new(-image.top, image.top == 0 ? [] : ['px'])
 
-      Sass::Script::List.new([x, y], :space)
+      sass_space_separated_list([x, y])
     end
 
     ::Sass::Script::Functions.declare :spritely_position, [:sprite_name, :image_name]
 
     def spritely_background(sprite_name, image_name)
-      Sass::Script::List.new([spritely_url(sprite_name), spritely_position(sprite_name, image_name)], :space)
+      sass_space_separated_list([spritely_url(sprite_name), spritely_position(sprite_name, image_name)])
     end
 
     ::Sass::Script::Functions.declare :spritely_background, [:sprite_name, :image_name]
@@ -34,7 +34,7 @@ module Spritely
         find_sprite_map(sprite_name)
       end
 
-      Sass::Script::Number.new(image.width, ['px'])
+      Sass::Script::Value::Number.new(image.width, ['px'])
     end
 
     ::Sass::Script::Functions.declare :spritely_width, [:sprite_name, :image_name]
@@ -46,7 +46,7 @@ module Spritely
         find_sprite_map(sprite_name)
       end
 
-      Sass::Script::Number.new(image.height, ['px'])
+      Sass::Script::Value::Number.new(image.height, ['px'])
     end
 
     ::Sass::Script::Functions.declare :spritely_height, [:sprite_name, :image_name]
@@ -71,6 +71,17 @@ module Spritely
 
     def sprite_maps
       @sprite_maps ||= {}
+    end
+
+    def sass_space_separated_list(value)
+      # Sass 3.5 introduced support for bracketed lists (sass/sass@be02da0), which changed the
+      # method signature of `Sass::Script::Value::List#initialize` to accept the `separator` as a
+      # keyword argument rather than as the second positional argument.
+      if Gem::Version.new(Sass.version[:number]) < Gem::Version.new("3.5")
+        Sass::Script::Value::List.new(value, :space)
+      else
+        Sass::Script::Value::List.new(value, separator: :space)
+      end
     end
   end
 end
