@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Spritely::Sprockets::Preprocessor do
-  let(:data) { "//= spacing some-new-image 789\n//= position some-new-image right\n//= repeat another-image true\n//= repeat yet-another-image false\n//= spacing 901\n//= position left" }
+  let(:data) { "//= spacing-below some-new-image 789\n//= position some-new-image right\n//= repeat another-image true\n//= repeat yet-another-image false\n//= spacing-below 901\n//= spacing-above 101\n//= position left" }
   let(:input) { {
     data: data,
     filename: "sprites/foo.png.sprite",
@@ -15,13 +15,25 @@ describe Spritely::Sprockets::Preprocessor do
 
     expect(input[:metadata][:sprite_directives]).to eq(
       directory: nil,
-      global: { spacing: '901', position: 'left' },
+      global: { spacing_above: '101', spacing_below: '901', position: 'left' },
       images: {
-        "some-new-image" => { spacing: '789', position: 'right' },
-        "another-image" => { repeat: 'true', spacing: '901', position: 'left' },
-        "yet-another-image" => { repeat: 'false', spacing: '901', position: 'left' }
+        "some-new-image" => { spacing_above: '101', spacing_below: '789', position: 'right' },
+        "another-image" => { repeat: 'true', spacing_above: '101', spacing_below: '901', position: 'left' },
+        "yet-another-image" => { repeat: 'false', spacing_above: '101', spacing_below: '901', position: 'left' }
       }
     )
+  end
+
+  describe 'deprecation warnings' do
+    describe 'spacing directive' do
+      let(:data) { "//= spacing true" }
+
+      it 'warns the user' do
+        deprecation_warning = 'The `spacing` directive is deprecated and has been replaced by `spacing-below`. It will be removed in Spritely 3.0. (called from sprites/foo.png.sprite)'
+
+        expect { preprocessor._call(input) }.to output(Regexp.new(Regexp.escape(deprecation_warning))).to_stderr
+      end
+    end
   end
 
   describe 'overriding the directory' do

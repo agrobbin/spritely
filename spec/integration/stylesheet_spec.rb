@@ -19,7 +19,7 @@ describe 'Stylesheet generation', :integration do
     it { should include(<<-CSS.strip_heredoc
       #mario {
         background-image: url(#{background_image_url});
-        background-position: -150px -806px;
+        background-position: -150px -816px;
         width: 200px;
         height: 214px; }
     CSS
