@@ -14,7 +14,7 @@ module Spritely
     #
     #   {
     #     directory: 'foo/bar',
-    #     global: { spacing: 5 },
+    #     global: { spacing: '5' },
     #     images: {
     #       'arrow' => { repeat: 'true', spacing: '10' },
     #       'another-image' => { position: 'right', spacing: '5' }
