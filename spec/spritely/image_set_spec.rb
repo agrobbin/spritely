@@ -3,7 +3,7 @@ require 'ostruct'
 
 describe Spritely::ImageSet do
   let(:path) { "#{__dir__}/../fixtures/test/foo.png" }
-  let(:options) { {repeat: 'true', spacing: '10', position: 'right'} }
+  let(:options) { {repeat: 'true', spacing_above: '5', spacing_below: '10', position: 'right'} }
 
   subject { Spritely::ImageSet.new(path, options) }
 
@@ -14,8 +14,9 @@ describe Spritely::ImageSet do
   its(:height) { should eq(1) }
   its(:name) { should eq('foo') }
   its(:left) { should eq(0) }
-  its(:spacing) { should eq(10) }
-  its(:outer_height) { should eq(11) }
+  its(:spacing_above) { should eq(5) }
+  its(:spacing_below) { should eq(10) }
+  its(:outer_height) { should eq(16) }
 
   describe '#top' do
     before { subject.top = 123 }
@@ -72,9 +73,9 @@ describe Spritely::ImageSet do
       end
 
       it 'should set the position of the images' do
-        expect(first_image.top).to eq(123)
+        expect(first_image.top).to eq(128)
         expect(first_image.left).to eq(0)
-        expect(second_image.top).to eq(123)
+        expect(second_image.top).to eq(128)
         expect(second_image.left).to eq(1)
       end
 

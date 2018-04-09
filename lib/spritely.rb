@@ -2,12 +2,20 @@ require 'sprockets'
 require 'spritely/sass_functions'
 require 'spritely/sprockets/preprocessor'
 require 'spritely/sprockets/transformer'
+require 'logger'
 
 if defined?(::Rails::Engine)
   require 'spritely/engine'
 end
 
 module Spritely
+  def self.logger
+    @logger ||= if defined?(::Rails.logger) && ::Rails.logger
+      ::Rails.logger
+    else
+      Logger.new($stderr)
+    end
+  end
 end
 
 ::Sprockets.register_mime_type 'text/sprite', extensions: ['.png.sprite']
