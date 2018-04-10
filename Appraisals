@@ -24,3 +24,12 @@ end
 appraise "rails-5-1" do
   gem "rails", "~> 5.1.0"
 end
+
+appraise "rails-5-2-sprockets-rails-2" do
+  gem "rails", "~> 5.2.0"
+  gem "sprockets-rails", "~> 2.0"
+end
+
+appraise "rails-5-2" do
+  gem "rails", "~> 5.2.0"
+end
