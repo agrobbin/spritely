@@ -1,6 +1,6 @@
 //= repeat background true
-//= spacing_above football 10
-//= spacing_below football 100
-//= spacing_below mario 10
+//= spacing_before football 10
+//= spacing_after football 100
+//= spacing_after mario 10
 //= opposite mario true
-//= spacing_below 5
+//= spacing_after 5

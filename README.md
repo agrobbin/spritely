@@ -133,17 +133,17 @@ To do it for all images in a sprite map:
 There are sometimes cases where you want to add some extra spacing (or padding) above or below images in your sprite. To do so for an image named `arrow.png`:
 
 ```
-//= spacing_above arrow 5
-//= spacing_below arrow 10
+//= spacing_before arrow 5
+//= spacing_after arrow 10
 ```
 
-This will add 5 pixels of spacing above `arrow.png` and 10 pixels of spacing below `arrow.png` within the sprite.
+This will add 5 pixels of spacing before `arrow.png` and 10 pixels of spacing after `arrow.png` within the sprite.
 
 To do it for all images in a sprite map:
 
 ```
-//= spacing_above 5
-//= spacing_below 10
+//= spacing_before 5
+//= spacing_after 10
 ```
 
 ## Tests

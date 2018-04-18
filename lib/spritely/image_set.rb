@@ -28,15 +28,15 @@ module Spritely
     end
 
     def outer_height
-      spacing_above + height + spacing_below
+      spacing_before + height + spacing_after
     end
 
-    def spacing_above
-      options[:spacing_above].to_i
+    def spacing_before
+      options[:spacing_before].to_i
     end
 
-    def spacing_below
-      options[:spacing_below].to_i
+    def spacing_after
+      options[:spacing_after].to_i
     end
 
     def repeated?
@@ -68,7 +68,7 @@ module Spritely
 
     def add_image!(left_position)
       images << Image.new(data).tap do |image|
-        image.top = top + spacing_above
+        image.top = top + spacing_before
         image.left = left_position
       end
     end
