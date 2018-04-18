@@ -8,7 +8,7 @@ module Spritely
     #   //= sort name desc
     #   //= repeat arrow true
     #   //= spacing_below arrow 10
-    #   //= position another-image right
+    #   //= opposite another-image true
     #   //= spacing_above 5
     #   //= spacing_below 5
     #
@@ -20,11 +20,11 @@ module Spritely
     #     global: { spacing_above: '5', spacing_below: '5' },
     #     images: {
     #       'arrow' => { repeat: 'true', spacing_above: '10', spacing_below: '5' },
-    #       'another-image' => { position: 'right', spacing_above: '5', spacing_below: '5' }
+    #       'another-image' => { opposite: 'true', spacing_above: '5', spacing_below: '5' }
     #     }
     #   }
     class Preprocessor < ::Sprockets::DirectiveProcessor
-      IMAGE_DIRECTIVES = %w(repeat position spacing_above spacing_below).freeze
+      IMAGE_DIRECTIVES = %w(repeat opposite spacing_above spacing_below).freeze
 
       def _call(input)
         @sprite_directives = { directory: nil, sort: nil, global: {}, images: {} }
@@ -51,6 +51,16 @@ module Spritely
           else
             process_global_option(directive, image_or_value)
           end
+        end
+      end
+
+      def process_position_directive(image_or_value, value_or_nil = nil)
+        Spritely.logger.warn "The `position` directive is deprecated and has been replaced by `opposite`. It will be removed in Spritely 3.0. (called from #{@filename})"
+
+        if value_or_nil
+          process_opposite_directive(image_or_value, 'true')
+        else
+          process_opposite_directive('true')
         end
       end
 

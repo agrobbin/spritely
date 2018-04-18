@@ -116,19 +116,17 @@ Note: While repetition can be done globally, you should exercise caution. If you
 
 #### Positioning
 
-When you want to use a sprited image on the right-hand side of an element, it's useful to position that image to the absolute right of the sprite map. To do so for an image named `arrow.png`:
+When you want to use a sprited image on the opposite side of an element, it's useful to position that image to the right/bottom (depending on the `direction`) of the sprite map. To do so for an image named `arrow.png`:
 
 ```
-//= position arrow right
+//= opposite arrow true
 ```
 
 To do it for all images in a sprite map:
 
 ```
-//= position right
+//= opposite true
 ```
-
-The default value is `left`.
 
 #### Spacing
 

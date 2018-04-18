@@ -3,7 +3,7 @@ require 'ostruct'
 
 describe Spritely::ImageSet do
   let(:path) { "#{__dir__}/../fixtures/test/foo.png" }
-  let(:options) { {repeat: 'true', spacing_above: '5', spacing_below: '10', position: 'right'} }
+  let(:options) { {repeat: 'true', spacing_above: '5', spacing_below: '10', opposite: 'true'} }
 
   subject { Spritely::ImageSet.new(path, options) }
 
@@ -41,19 +41,19 @@ describe Spritely::ImageSet do
     end
   end
 
-  describe '#right?' do
-    it { should be_right }
+  describe '#opposite?' do
+    it { should be_opposite }
 
-    context 'position option is passed as left' do
-      let(:options) { {position: 'left'} }
+    context 'position option is passed as false' do
+      let(:options) { { position: 'false' } }
 
-      it { should_not be_right }
+      it { should_not be_opposite }
     end
 
     context 'position option is not passed' do
       let(:options) { {} }
 
-      it { should_not be_right }
+      it { should_not be_opposite }
     end
   end
 
@@ -80,12 +80,12 @@ describe Spritely::ImageSet do
         expect(second_image.left).to eq(1)
       end
 
-      context 'it is also positioned to the right' do
-        let(:options) { {position: 'right', repeat: 'true'} }
+      context 'it is also positioned to the opposite side' do
+        let(:options) { {opposite: 'true', repeat: 'true'} }
 
         its(:left) { should eq(0) }
 
-        it 'should ignore the position option' do
+        it 'should ignore the opposite option' do
           expect(first_image.top).to eq(123)
           expect(first_image.left).to eq(0)
           expect(second_image.top).to eq(123)
@@ -95,7 +95,7 @@ describe Spritely::ImageSet do
     end
 
     context 'the image is positioned to the right' do
-      let(:options) { {position: 'right'} }
+      let(:options) { {opposite: 'true'} }
       let(:image) { ImageDouble.new }
 
       before do

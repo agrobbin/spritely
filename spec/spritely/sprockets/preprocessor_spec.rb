@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Spritely::Sprockets::Preprocessor do
-  let(:data) { "//= spacing_below some-new-image 789\n//= position some-new-image right\n//= repeat another-image true\n//= repeat yet-another-image false\n//= spacing_below 901\n//= spacing_above 101\n//= position left" }
+  let(:data) { "//= spacing_below some-new-image 789\n//= opposite some-new-image true\n//= repeat another-image true\n//= repeat yet-another-image false\n//= spacing_below 901\n//= spacing_above 101" }
   let(:input) { {
     data: data,
     filename: "sprites/foo.png.sprite",
@@ -16,16 +16,26 @@ describe Spritely::Sprockets::Preprocessor do
     expect(input[:metadata][:sprite_directives]).to eq(
       directory: nil,
       sort: nil,
-      global: { spacing_above: '101', spacing_below: '901', position: 'left' },
+      global: { spacing_above: '101', spacing_below: '901' },
       images: {
-        "some-new-image" => { spacing_above: '101', spacing_below: '789', position: 'right' },
-        "another-image" => { repeat: 'true', spacing_above: '101', spacing_below: '901', position: 'left' },
-        "yet-another-image" => { repeat: 'false', spacing_above: '101', spacing_below: '901', position: 'left' }
+        "some-new-image" => { spacing_above: '101', spacing_below: '789', opposite: 'true' },
+        "another-image" => { repeat: 'true', spacing_above: '101', spacing_below: '901' },
+        "yet-another-image" => { repeat: 'false', spacing_above: '101', spacing_below: '901' }
       }
     )
   end
 
   describe 'deprecation warnings' do
+    describe 'position directive' do
+      let(:data) { "//= position some-new-image right" }
+
+      it 'warns the user' do
+        expect(Spritely.logger).to receive(:warn).with('The `position` directive is deprecated and has been replaced by `opposite`. It will be removed in Spritely 3.0. (called from sprites/foo.png.sprite)')
+
+        preprocessor._call(input)
+      end
+    end
+
     describe 'spacing directive' do
       let(:data) { "//= spacing 5" }
 

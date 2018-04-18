@@ -43,12 +43,12 @@ module Spritely
       options[:repeat] == 'true'
     end
 
-    def right?
-      options[:position] == 'right'
+    def opposite?
+      options[:opposite] == 'true'
     end
 
     # When positioned in the sprite, we must take into account whether the image
-    # is configured to repeat, or is positioned to the right-hand side of the
+    # is configured to repeat, or is positioned to the opposite side of the
     # sprite map.
     def position_in!(collection_width)
       if repeated?
@@ -57,7 +57,7 @@ module Spritely
           add_image!(left_position)
           left_position += width
         end
-      elsif right?
+      elsif opposite?
         add_image!(@left = collection_width - width)
       else
         add_image!(0)
