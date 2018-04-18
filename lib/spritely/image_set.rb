@@ -32,7 +32,7 @@ module Spritely
     end
 
     def spacing_below
-      (options[:spacing_below] || options[:spacing]).to_i
+      options[:spacing_below].to_i
     end
 
     def repeated?

@@ -26,12 +26,18 @@ describe Spritely::Sprockets::Preprocessor do
 
   describe 'deprecation warnings' do
     describe 'spacing directive' do
-      let(:data) { "//= spacing true" }
+      let(:data) { "//= spacing 5" }
 
       it 'warns the user' do
-        deprecation_warning = 'The `spacing` directive is deprecated and has been replaced by `spacing-below`. It will be removed in Spritely 3.0. (called from sprites/foo.png.sprite)'
+        expect(Spritely.logger).to receive(:warn).with('The `spacing` directive is deprecated and has been replaced by `spacing-below`. It will be removed in Spritely 3.0. (called from sprites/foo.png.sprite)')
 
-        expect { preprocessor._call(input) }.to output(Regexp.new(Regexp.escape(deprecation_warning))).to_stderr
+        preprocessor._call(input)
+
+        expect(input[:metadata][:sprite_directives]).to eq(
+          directory: nil,
+          global: { spacing_below: '5' },
+          images: {}
+        )
       end
     end
   end

@@ -22,8 +22,8 @@ module Spritely
     #     }
     #   }
     class Preprocessor < ::Sprockets::DirectiveProcessor
-      GLOBAL_DIRECTIVES = %w(position spacing spacing-above spacing-below).freeze
-      IMAGE_DIRECTIVES = %w(repeat position spacing spacing-above spacing-below).freeze
+      GLOBAL_DIRECTIVES = %w(position spacing-above spacing-below).freeze
+      IMAGE_DIRECTIVES = %w(repeat position spacing-above spacing-below).freeze
 
       def _call(input)
         @sprite_directives = { directory: nil, global: {}, images: {} }
@@ -49,11 +49,15 @@ module Spritely
         end
       end
 
+      def process_spacing_directive(*args)
+        Spritely.logger.warn "The `spacing` directive is deprecated and has been replaced by `spacing-below`. It will be removed in Spritely 3.0. (called from #{@filename})"
+
+        public_send("process_spacing-below_directive", *args)
+      end
+
       private
 
       def process_image_option(directive, image, value)
-        check_if_deprecated_directive(directive)
-
         @sprite_directives[:images][image] ||= {}
         @sprite_directives[:images][image][directive.tr('-', '_').to_sym] = value
       end
@@ -61,20 +65,12 @@ module Spritely
       def process_global_option(directive, value)
         raise ArgumentError, "'#{directive}' is not a valid global option" unless GLOBAL_DIRECTIVES.include?(directive)
 
-        check_if_deprecated_directive(directive)
-
         @sprite_directives[:global][directive.tr('-', '_').to_sym] = value
       end
 
       def merge_global_options!
         @sprite_directives[:images].each do |image, options|
           options.merge!(@sprite_directives[:global]) { |key, left, right| left }
-        end
-      end
-
-      def check_if_deprecated_directive(directive)
-        if directive == 'spacing'
-          Spritely.logger.warn "The `spacing` directive is deprecated and has been replaced by `spacing-below`. It will be removed in Spritely 3.0. (called from #{@filename})"
         end
       end
     end
