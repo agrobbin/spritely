@@ -119,8 +119,8 @@ The default value is `left`.
 There are sometimes cases where you want to add some extra spacing (or padding) above or below images in your sprite. To do so for an image named `arrow.png`:
 
 ```
-//= spacing-above arrow 5
-//= spacing-below arrow 10
+//= spacing_above arrow 5
+//= spacing_below arrow 10
 ```
 
 This will add 5 pixels of spacing above `arrow.png` and 10 pixels of spacing below `arrow.png` within the sprite.
@@ -128,8 +128,8 @@ This will add 5 pixels of spacing above `arrow.png` and 10 pixels of spacing bel
 To do it for all images in a sprite map:
 
 ```
-//= spacing-above 5
-//= spacing-below 10
+//= spacing_above 5
+//= spacing_below 10
 ```
 
 ## Tests

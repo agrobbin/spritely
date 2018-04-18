@@ -1,6 +1,6 @@
 //= repeat background true
-//= spacing-above football 10
-//= spacing-below football 100
-//= spacing-below mario 10
+//= spacing_above football 10
+//= spacing_below football 100
+//= spacing_below mario 10
 //= position mario right
-//= spacing-below 5
+//= spacing_below 5
