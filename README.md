@@ -72,13 +72,23 @@ The compiled CSS should look something like this:
 
 Spritely utilizes Sprockets' `depend_on` and `link_asset` directives to listen to changes to existing images within a sprited folder. This, in addition to the cache being busted upon related stylesheet changes, takes care of 99 out of 100 cases of image changes.
 
-### Available directives
+### Configuration directives
 
-There are a few different sprite map directives available to you. Some directives are available as both global and per-image directives while others are just per-image. Per-image directives overwrite global directives.
+You can customize the configuration of your sprite map by using these global directives.
 
-Global directives are set just like per-image ones are, except they don't include an image name.
+#### Directory
 
-#### Repetition (per-image only)
+If you have sprite images that are stored in a different location than the default (`app/assets/images/[sprite-name]`), you can override the directory that Spritely looks for images to sprite. To do so when a sprite's images are stored in `app/assets/images/foo/bar`:
+
+```
+//= directory foo/bar
+```
+
+### Image directives
+
+There are a few different image-related sprite map directives available to you. All of these are available as both global and per-image directives. Per-image directives overwrite global directives. Global directives are set just like per-image ones are, except they don't include an image name.
+
+#### Repetition
 
 You can repeat the image horizontally. To do so for an image named `arrow.png`:
 
@@ -86,7 +96,9 @@ You can repeat the image horizontally. To do so for an image named `arrow.png`:
 //= repeat arrow true
 ```
 
-#### Positioning (global and per-image)
+Note: While repetition can be done globally, you should exercise caution. If your globally-repeating sprite map has multiple oddly-shaped images (rather than small images like background tiles), your sprite map could get very large, and its generation/loading could severely slow down your computer. This is because, to correctly fill the space with whole copies of each image, Spritely has to determine the least common multiple of all repeated images. This means that for a sprite map with 4 repeating images with widths of `[35px, 327px, 250px, 200px]`, your sprite will need to be `2289000px` wide.
+
+#### Positioning
 
 When you want to use a sprited image on the right-hand side of an element, it's useful to position that image to the absolute right of the sprite map. To do so for an image named `arrow.png`:
 
@@ -102,7 +114,7 @@ To do it for all images in a sprite map:
 
 The default value is `left`.
 
-#### Spacing (global and per-image)
+#### Spacing
 
 There are sometimes cases where you want to add some extra spacing (or padding) above or below images in your sprite. To do so for an image named `arrow.png`:
 
@@ -118,14 +130,6 @@ To do it for all images in a sprite map:
 ```
 //= spacing-above 5
 //= spacing-below 10
-```
-
-#### Directory (global only)
-
-If you have sprite images that are stored in a different location than the default (`app/assets/images/[sprite-name]`), you can override the directory that Spritely looks for images to sprite. To do so when a sprite's images are stored in `app/assets/images/foo/bar`:
-
-```
-//= directory foo/bar
 ```
 
 ## Tests

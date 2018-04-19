@@ -22,7 +22,7 @@ module Spritely
     #     }
     #   }
     class Preprocessor < ::Sprockets::DirectiveProcessor
-      GLOBAL_DIRECTIVES = %w(position spacing-above spacing-below).freeze
+      CONFIG_DIRECTIVES = %w(directory).freeze
       IMAGE_DIRECTIVES = %w(repeat position spacing-above spacing-below).freeze
 
       def _call(input)
@@ -35,11 +35,13 @@ module Spritely
         end
       end
 
-      def process_directory_directive(value)
-        @sprite_directives[:directory] = value
+      CONFIG_DIRECTIVES.each do |directive|
+        define_method("process_#{directive}_directive") do |value|
+          @sprite_directives[directive.to_sym] = value
+        end
       end
 
-      (GLOBAL_DIRECTIVES + IMAGE_DIRECTIVES).uniq.each do |directive|
+      IMAGE_DIRECTIVES.each do |directive|
         define_method("process_#{directive}_directive") do |image_or_value, value_or_nil = nil|
           if value_or_nil
             process_image_option(directive, image_or_value, value_or_nil)
@@ -63,8 +65,6 @@ module Spritely
       end
 
       def process_global_option(directive, value)
-        raise ArgumentError, "'#{directive}' is not a valid global option" unless GLOBAL_DIRECTIVES.include?(directive)
-
         @sprite_directives[:global][directive.tr('-', '_').to_sym] = value
       end
 
