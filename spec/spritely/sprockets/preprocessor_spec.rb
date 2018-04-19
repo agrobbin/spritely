@@ -16,6 +16,7 @@ describe Spritely::Sprockets::Preprocessor do
     expect(input[:metadata][:sprite_directives]).to eq(
       directory: nil,
       sort: nil,
+      layout: nil,
       global: { spacing_before: '101', spacing_after: '901' },
       images: {
         "some-new-image" => { spacing_before: '101', spacing_after: '789', opposite: 'true' },
@@ -47,6 +48,7 @@ describe Spritely::Sprockets::Preprocessor do
         expect(input[:metadata][:sprite_directives]).to eq(
           directory: nil,
           sort: nil,
+          layout: nil,
           global: { spacing_after: '5' },
           images: {}
         )
@@ -64,6 +66,7 @@ describe Spritely::Sprockets::Preprocessor do
         expect(input[:metadata][:sprite_directives]).to eq(
           directory: nil,
           sort: nil,
+          layout: nil,
           global: { spacing_before: '5' },
           images: {}
         )
@@ -81,6 +84,7 @@ describe Spritely::Sprockets::Preprocessor do
         expect(input[:metadata][:sprite_directives]).to eq(
           directory: nil,
           sort: nil,
+          layout: nil,
           global: { spacing_before: '5' },
           images: {}
         )
@@ -98,6 +102,7 @@ describe Spritely::Sprockets::Preprocessor do
         expect(input[:metadata][:sprite_directives]).to eq(
           directory: nil,
           sort: nil,
+          layout: nil,
           global: { spacing_after: '5' },
           images: {}
         )
@@ -115,6 +120,7 @@ describe Spritely::Sprockets::Preprocessor do
         expect(input[:metadata][:sprite_directives]).to eq(
           directory: nil,
           sort: nil,
+          layout: nil,
           global: { spacing_after: '5' },
           images: {}
         )
@@ -136,6 +142,28 @@ describe Spritely::Sprockets::Preprocessor do
       expect(input[:metadata][:sprite_directives]).to eq(
         directory: 'foo/sprites',
         sort: nil,
+        layout: nil,
+        global: {},
+        images: {}
+      )
+    end
+  end
+
+  describe 'overriding the layout' do
+    let(:data) { "//= layout horizontal" }
+    let(:input) { {
+      data: data,
+      filename: "sprites/foo.png.sprite",
+      metadata: {}
+    } }
+
+    it 'saves the processed options as part of the metadata' do
+      preprocessor._call(input)
+
+      expect(input[:metadata][:sprite_directives]).to eq(
+        directory: nil,
+        sort: nil,
+        layout: 'horizontal',
         global: {},
         images: {}
       )
@@ -156,6 +184,7 @@ describe Spritely::Sprockets::Preprocessor do
       expect(input[:metadata][:sprite_directives]).to eq(
         directory: nil,
         sort: ['name', 'desc'],
+        layout: nil,
         global: {},
         images: {}
       )
@@ -170,6 +199,7 @@ describe Spritely::Sprockets::Preprocessor do
         expect(input[:metadata][:sprite_directives]).to eq(
           directory: nil,
           sort: ['size'],
+          layout: nil,
           global: {},
           images: {}
         )

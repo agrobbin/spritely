@@ -6,6 +6,7 @@ module Spritely
     #
     #   //= directory foo/bar
     #   //= sort name desc
+    #   //= layout horizontal
     #   //= repeat arrow true
     #   //= spacing_after arrow 10
     #   //= opposite another-image true
@@ -17,6 +18,7 @@ module Spritely
     #   {
     #     directory: 'foo/bar',
     #     sort: ['name, 'desc'],
+    #     layout: 'horizontal',
     #     global: { spacing_before: '5', spacing_after: '5' },
     #     images: {
     #       'arrow' => { repeat: 'true', spacing_before: '10', spacing_after: '5' },
@@ -27,7 +29,7 @@ module Spritely
       IMAGE_DIRECTIVES = %w(repeat opposite spacing_before spacing_after).freeze
 
       def _call(input)
-        @sprite_directives = { directory: nil, sort: nil, global: {}, images: {} }
+        @sprite_directives = { directory: nil, sort: nil, layout: nil, global: {}, images: {} }
 
         super.tap do
           merge_global_options!
@@ -42,6 +44,10 @@ module Spritely
 
       def process_sort_directive(*values)
         @sprite_directives[:sort] = values
+      end
+
+      def process_layout_directive(value)
+        @sprite_directives[:layout] = value
       end
 
       IMAGE_DIRECTIVES.each do |directive|

@@ -9,7 +9,7 @@ module Spritely
 
     def_delegators :collection, :find, :width, :height, :images
 
-    attr_reader :name, :environment, :options, :directory, :sort, :glob
+    attr_reader :name, :environment, :options, :directory, :sort, :layout, :glob
 
     def initialize(name, environment, options)
       @name = name
@@ -17,11 +17,12 @@ module Spritely
       @options = options.dup
       @directory = @options.delete(:directory) || name
       @sort = @options.delete(:sort) || ['name']
+      @layout = @options.delete(:layout) || 'vertical'
       @glob = [directory, "*.png"].join("/")
     end
 
     def inspect
-      "#<Spritely::SpriteMap name=#{name} directory=#{directory} sort=#{sort} options=#{options}>"
+      "#<Spritely::SpriteMap name=#{name} directory=#{directory} sort=#{sort} layout=#{layout} options=#{options}>"
     end
 
     def cache_key
@@ -29,7 +30,7 @@ module Spritely
     end
 
     def collection
-      @collection ||= Collection.create(files, sort, options)
+      @collection ||= Collection.create(files, sort, layout, options)
     end
 
     def save!
