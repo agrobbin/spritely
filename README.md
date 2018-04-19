@@ -100,6 +100,16 @@ To reverse the order, add a direction:
 
 The default is `name` (`asc` is the default direction).
 
+#### Layout
+
+There are cases where you have images that need to be organized left-to-right rather than top-to-bottom. In those cases, you can configure the layout:
+
+```
+//= layout horizontal
+```
+
+The default value is `vertical`.
+
 ### Image directives
 
 There are a few different image-related sprite map directives available to you. All of these are available as both global and per-image directives. Per-image directives overwrite global directives. Global directives are set just like per-image ones are, except they don't include an image name.

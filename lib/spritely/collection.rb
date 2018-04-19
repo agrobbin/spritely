@@ -1,4 +1,5 @@
 require 'spritely/image_set'
+require 'spritely/layouts/horizontal'
 require 'spritely/layouts/vertical'
 
 module Spritely
@@ -10,6 +11,7 @@ module Spritely
     def_delegators :layout, :width, :height, :position!
 
     LAYOUTS = {
+      horizontal: Layouts::Horizontal,
       vertical: Layouts::Vertical
     }.freeze
 

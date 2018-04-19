@@ -1,0 +1,7 @@
+//= layout horizontal
+//= repeat background true
+//= spacing_before football 10
+//= spacing_after football 100
+//= spacing_after mario 10
+//= opposite mario true
+//= spacing_after 5

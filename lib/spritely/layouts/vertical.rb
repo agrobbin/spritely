@@ -3,30 +3,16 @@ require 'spritely/layouts/base'
 module Spritely
   module Layouts
     class Vertical < Spritely::Layouts::Base
-      # Upon creation, the collection is then positioned appropriately by
-      # positioning each image within the sprite.
       def position!
         image_sets.each_with_index(&method(:position_image_set!))
       end
 
-      # Returns the width of the to-be-generated sprite image. When none of the
-      # images repeat, it is simply the max width of all images in the sprite.
-      # When an image in the sprite is repeated, a calculation is performed based
-      # on the least common multiple of all repeated images. That least common
-      # multiple is then multiplied by the minimum multiple that will result in a
-      # value greater than or equal to the max width of all images in the sprite.
       def width
-        @width ||= if image_sets.none?(&:repeated?)
-          max_width
-        else
-          lcm = image_sets.select(&:repeated?).collect(&:width).reduce(:lcm)
-
-          lcm * (max_width / lcm.to_f).ceil
-        end
+        @width ||= sizer.variable_size
       end
 
       def height
-        @height ||= heights.reduce(:+)
+        @height ||= sizer.fixed_size
       end
 
       private
@@ -35,7 +21,7 @@ module Spritely
       # is configured to repeat, or is positioned to the opposite side of the
       # sprite map.
       def position_image_set!(image_set, index)
-        image_set.top = heights[0..index].reduce(:+) - image_set.outer_size(:height)
+        image_set.top = sizer.fixed_offset(image_set, index)
 
         if image_set.repeated?
           left = 0
@@ -51,12 +37,8 @@ module Spritely
         end
       end
 
-      def max_width
-        @max_width ||= image_sets.collect(&:width).max
-      end
-
-      def heights
-        @heights ||= image_sets.collect { |image_set| image_set.outer_size(:height) }
+      def sizer
+        @sizer ||= ConventionalSizer.new(image_sets, fixed: :height, variable: :width)
       end
     end
   end
