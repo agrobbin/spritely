@@ -60,12 +60,4 @@ describe Spritely::Sprockets::Preprocessor do
       )
     end
   end
-
-  describe 'invalid global option' do
-    let(:data) { "//= repeat true" }
-
-    it 'raises an exception' do
-      expect { preprocessor._call(input) }.to raise_error(ArgumentError, "'repeat' is not a valid global option")
-    end
-  end
 end
