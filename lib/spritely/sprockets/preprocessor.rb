@@ -6,10 +6,10 @@ module Spritely
     #
     #   //= directory foo/bar
     #   //= repeat arrow true
-    #   //= spacing-below arrow 10
+    #   //= spacing_below arrow 10
     #   //= position another-image right
-    #   //= spacing-above 5
-    #   //= spacing-below 5
+    #   //= spacing_above 5
+    #   //= spacing_below 5
     #
     # To this:
     #
@@ -23,7 +23,7 @@ module Spritely
     #   }
     class Preprocessor < ::Sprockets::DirectiveProcessor
       CONFIG_DIRECTIVES = %w(directory).freeze
-      IMAGE_DIRECTIVES = %w(repeat position spacing-above spacing-below).freeze
+      IMAGE_DIRECTIVES = %w(repeat position spacing_above spacing_below).freeze
 
       def _call(input)
         @sprite_directives = { directory: nil, global: {}, images: {} }
@@ -52,20 +52,34 @@ module Spritely
       end
 
       def process_spacing_directive(*args)
-        Spritely.logger.warn "The `spacing` directive is deprecated and has been replaced by `spacing-below`. It will be removed in Spritely 3.0. (called from #{@filename})"
+        Spritely.logger.warn "The `spacing` directive is deprecated and has been replaced by `spacing_below`. It will be removed in Spritely 3.0. (called from #{@filename})"
 
-        public_send("process_spacing-below_directive", *args)
+        process_spacing_below_directive(*args)
+      end
+
+      # Use `define_method` here because of the dash in the directive name
+      define_method("process_spacing-above_directive") do |*args|
+        Spritely.logger.warn "The `spacing-above` directive is deprecated and has been replaced by `spacing_above`. It will be removed in Spritely 3.0. (called from #{@filename})"
+
+        process_spacing_above_directive(*args)
+      end
+
+      # Use `define_method` here because of the dash in the directive name
+      define_method("process_spacing-below_directive") do |*args|
+        Spritely.logger.warn "The `spacing-below` directive is deprecated and has been replaced by `spacing_below`. It will be removed in Spritely 3.0. (called from #{@filename})"
+
+        process_spacing_below_directive(*args)
       end
 
       private
 
       def process_image_option(directive, image, value)
         @sprite_directives[:images][image] ||= {}
-        @sprite_directives[:images][image][directive.tr('-', '_').to_sym] = value
+        @sprite_directives[:images][image][directive.to_sym] = value
       end
 
       def process_global_option(directive, value)
-        @sprite_directives[:global][directive.tr('-', '_').to_sym] = value
+        @sprite_directives[:global][directive.to_sym] = value
       end
 
       def merge_global_options!
