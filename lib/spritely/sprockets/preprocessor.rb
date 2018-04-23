@@ -5,6 +5,7 @@ module Spritely
     # Converts Sprockets directives from this:
     #
     #   //= directory foo/bar
+    #   //= sort name desc
     #   //= repeat arrow true
     #   //= spacing_below arrow 10
     #   //= position another-image right
@@ -15,6 +16,7 @@ module Spritely
     #
     #   {
     #     directory: 'foo/bar',
+    #     sort: ['name, 'desc'],
     #     global: { spacing_above: '5', spacing_below: '5' },
     #     images: {
     #       'arrow' => { repeat: 'true', spacing_above: '10', spacing_below: '5' },
@@ -22,11 +24,10 @@ module Spritely
     #     }
     #   }
     class Preprocessor < ::Sprockets::DirectiveProcessor
-      CONFIG_DIRECTIVES = %w(directory).freeze
       IMAGE_DIRECTIVES = %w(repeat position spacing_above spacing_below).freeze
 
       def _call(input)
-        @sprite_directives = { directory: nil, global: {}, images: {} }
+        @sprite_directives = { directory: nil, sort: nil, global: {}, images: {} }
 
         super.tap do
           merge_global_options!
@@ -35,10 +36,12 @@ module Spritely
         end
       end
 
-      CONFIG_DIRECTIVES.each do |directive|
-        define_method("process_#{directive}_directive") do |value|
-          @sprite_directives[directive.to_sym] = value
-        end
+      def process_directory_directive(value)
+        @sprite_directives[:directory] = value
+      end
+
+      def process_sort_directive(*values)
+        @sprite_directives[:sort] = values
       end
 
       IMAGE_DIRECTIVES.each do |directive|

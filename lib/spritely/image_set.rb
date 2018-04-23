@@ -16,7 +16,11 @@ module Spritely
     end
 
     def name
-      File.basename(path, ".png")
+      @name ||= File.basename(path, ".png")
+    end
+
+    def size
+      @size ||= File.size(path)
     end
 
     def images

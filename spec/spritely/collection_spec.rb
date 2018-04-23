@@ -3,8 +3,9 @@ require 'spec_helper'
 describe Spritely::Collection do
   let(:first_set) { double(repeated?: true, name: 'foo', width: 1, outer_height: 10, images: [1]) }
   let(:second_set) { double(repeated?: false, name: 'bar', width: 100, outer_height: 100, images: [2, 3]) }
+  let(:sort_options) { ['name'] }
 
-  subject { Spritely::Collection.new(['file-1.png', 'file-2.png'], { global: { spacing: '5' }, images: { 'file-1' => { repeat: 'true' } } }) }
+  subject { Spritely::Collection.new(['file-1.png', 'file-2.png'], sort_options, { global: { spacing: '5' }, images: { 'file-1' => { repeat: 'true' } } }) }
 
   before do
     allow(Spritely::ImageSet).to receive(:new).with('file-1.png', repeat: 'true').and_return(first_set)
@@ -12,6 +13,7 @@ describe Spritely::Collection do
   end
 
   its(:files) { should eq(['file-1.png', 'file-2.png']) }
+  its(:sort_options) { should eq(['name']) }
   its(:options) { should eq({ global: { spacing: '5' }, images: { 'file-1' => { repeat: 'true' } } }) }
   its(:images) { should eq([1, 2, 3]) }
   its(:height) { should eq(110) }
@@ -19,9 +21,12 @@ describe Spritely::Collection do
   describe '.create' do
     let(:collection) { double }
 
+    before { allow(Spritely::Collection).to receive(:new).with('something').and_return(collection) }
+
     it 'should attempt to generate the sprite' do
-      allow(Spritely::Collection).to receive(:new).with('something').and_return(collection)
       expect(collection).to receive(:position!)
+      expect(collection).to receive(:sort!)
+
       Spritely::Collection.create('something')
     end
   end
@@ -29,7 +34,7 @@ describe Spritely::Collection do
   describe '#width' do
     let(:third_set) { double(repeated?: false, width: 65, height: 100) }
 
-    subject { Spritely::Collection.new(['file-1.png', 'file-2.png', 'file-3.png'], { global: {}, images: {} }) }
+    subject { Spritely::Collection.new(['file-1.png', 'file-2.png', 'file-3.png'], sort_options, { global: {}, images: {} }) }
 
     before do
       allow(Spritely::ImageSet).to receive(:new).with('file-1.png', {}).and_return(first_set)
@@ -90,5 +95,13 @@ describe Spritely::Collection do
       expect(second_set).to receive(:position_in!).with(100)
       subject.position!
     end
+  end
+
+  describe '#sort!' do
+    let(:sort_options) { ['name'] }
+
+    before { subject.sort! }
+
+    its(:image_sets) { should eq([second_set, first_set]) }
   end
 end

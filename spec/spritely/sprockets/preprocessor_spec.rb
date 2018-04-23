@@ -15,6 +15,7 @@ describe Spritely::Sprockets::Preprocessor do
 
     expect(input[:metadata][:sprite_directives]).to eq(
       directory: nil,
+      sort: nil,
       global: { spacing_above: '101', spacing_below: '901', position: 'left' },
       images: {
         "some-new-image" => { spacing_above: '101', spacing_below: '789', position: 'right' },
@@ -35,6 +36,7 @@ describe Spritely::Sprockets::Preprocessor do
 
         expect(input[:metadata][:sprite_directives]).to eq(
           directory: nil,
+          sort: nil,
           global: { spacing_below: '5' },
           images: {}
         )
@@ -51,6 +53,7 @@ describe Spritely::Sprockets::Preprocessor do
 
         expect(input[:metadata][:sprite_directives]).to eq(
           directory: nil,
+          sort: nil,
           global: { spacing_above: '5' },
           images: {}
         )
@@ -67,6 +70,7 @@ describe Spritely::Sprockets::Preprocessor do
 
         expect(input[:metadata][:sprite_directives]).to eq(
           directory: nil,
+          sort: nil,
           global: { spacing_below: '5' },
           images: {}
         )
@@ -87,9 +91,45 @@ describe Spritely::Sprockets::Preprocessor do
 
       expect(input[:metadata][:sprite_directives]).to eq(
         directory: 'foo/sprites',
+        sort: nil,
         global: {},
         images: {}
       )
+    end
+  end
+
+  describe 'overriding the sorting' do
+    let(:data) { "//= sort name desc" }
+    let(:input) { {
+      data: data,
+      filename: "sprites/foo.png.sprite",
+      metadata: {}
+    } }
+
+    it 'saves the processed options as part of the metadata' do
+      preprocessor._call(input)
+
+      expect(input[:metadata][:sprite_directives]).to eq(
+        directory: nil,
+        sort: ['name', 'desc'],
+        global: {},
+        images: {}
+      )
+    end
+
+    context 'implicit direction' do
+      let(:data) { "//= sort size" }
+
+      it 'saves the processed options as part of the metadata' do
+        preprocessor._call(input)
+
+        expect(input[:metadata][:sprite_directives]).to eq(
+          directory: nil,
+          sort: ['size'],
+          global: {},
+          images: {}
+        )
+      end
     end
   end
 end
