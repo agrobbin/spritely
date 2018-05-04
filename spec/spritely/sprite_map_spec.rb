@@ -4,18 +4,20 @@ require 'active_support/core_ext/hash/except'
 describe Spritely::SpriteMap do
   let(:directory) { nil }
   let(:sort) { nil }
-  let(:options) { { directory: directory, sort: sort, global: {}, images: { 'some-new-image' => { x: '123', y: '456' }, 'another-image' => { repeat: 'true' } } } }
+  let(:layout) { nil }
+  let(:options) { { directory: directory, sort: sort, layout: layout, global: {}, images: { 'some-new-image' => { x: '123', y: '456' }, 'another-image' => { repeat: 'true' } } } }
   let(:environment) { double(paths: ["#{__dir__}/../fixtures"]) }
 
   subject { Spritely::SpriteMap.new('test', environment, options) }
 
   its(:name) { should eq('test') }
   its(:environment) { should eq(environment) }
-  its(:options) { should eq(options.except(:directory, :sort)) }
+  its(:options) { should eq(options.except(:directory, :sort, :layout)) }
   its(:directory) { should eq('test') }
   its(:sort) { should eq(['name']) }
+  its(:layout) { should eq('vertical') }
   its(:glob) { should eq('test/*.png') }
-  its(:inspect) { should eq(%~#<Spritely::SpriteMap name=test directory=test sort=["name"] options=#{options.except(:directory, :sort)}>~) }
+  its(:inspect) { should eq(%~#<Spritely::SpriteMap name=test directory=test sort=["name"] layout=vertical options=#{options.except(:directory, :sort, :layout)}>~) }
 
   context 'the directory is set' do
     let(:directory) { 'test/sprite-images' }
@@ -29,6 +31,12 @@ describe Spritely::SpriteMap do
     its(:sort) { should eq(['name', 'desc']) }
   end
 
+  context 'the layout is set' do
+    let(:layout) { 'horizontal' }
+
+    its(:layout) { should eq('horizontal') }
+  end
+
   describe '#cache_key' do
     before { allow(subject).to receive(:collection).and_return(double(to_s: 'collection cache value')) }
 
@@ -38,7 +46,7 @@ describe Spritely::SpriteMap do
   describe '#collection' do
     let(:collection) { double(find: 'find value', width: 'width value', height: 'height value', images: 'images value') }
 
-    before { allow(Spritely::Collection).to receive(:create).with(["#{__dir__}/../fixtures/test/foo.png"], ['name'], options.except(:directory, :sort)).and_return(collection) }
+    before { allow(Spritely::Collection).to receive(:create).with(["#{__dir__}/../fixtures/test/foo.png"], ['name'], 'vertical', options.except(:directory, :sort, :layout)).and_return(collection) }
 
     its(:collection) { should eq(collection) }
 

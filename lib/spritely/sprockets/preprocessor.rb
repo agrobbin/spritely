@@ -6,28 +6,30 @@ module Spritely
     #
     #   //= directory foo/bar
     #   //= sort name desc
+    #   //= layout horizontal
     #   //= repeat arrow true
-    #   //= spacing_below arrow 10
-    #   //= position another-image right
-    #   //= spacing_above 5
-    #   //= spacing_below 5
+    #   //= spacing_after arrow 10
+    #   //= opposite another-image true
+    #   //= spacing_before 5
+    #   //= spacing_after 5
     #
     # To this:
     #
     #   {
     #     directory: 'foo/bar',
     #     sort: ['name, 'desc'],
-    #     global: { spacing_above: '5', spacing_below: '5' },
+    #     layout: 'horizontal',
+    #     global: { spacing_before: '5', spacing_after: '5' },
     #     images: {
-    #       'arrow' => { repeat: 'true', spacing_above: '10', spacing_below: '5' },
-    #       'another-image' => { position: 'right', spacing_above: '5', spacing_below: '5' }
+    #       'arrow' => { repeat: 'true', spacing_before: '10', spacing_after: '5' },
+    #       'another-image' => { opposite: 'true', spacing_before: '5', spacing_after: '5' }
     #     }
     #   }
     class Preprocessor < ::Sprockets::DirectiveProcessor
-      IMAGE_DIRECTIVES = %w(repeat position spacing_above spacing_below).freeze
+      IMAGE_DIRECTIVES = %w(repeat opposite spacing_before spacing_after).freeze
 
       def _call(input)
-        @sprite_directives = { directory: nil, sort: nil, global: {}, images: {} }
+        @sprite_directives = { directory: nil, sort: nil, layout: nil, global: {}, images: {} }
 
         super.tap do
           merge_global_options!
@@ -44,6 +46,10 @@ module Spritely
         @sprite_directives[:sort] = values
       end
 
+      def process_layout_directive(value)
+        @sprite_directives[:layout] = value
+      end
+
       IMAGE_DIRECTIVES.each do |directive|
         define_method("process_#{directive}_directive") do |image_or_value, value_or_nil = nil|
           if value_or_nil
@@ -54,24 +60,46 @@ module Spritely
         end
       end
 
-      def process_spacing_directive(*args)
-        Spritely.logger.warn "The `spacing` directive is deprecated and has been replaced by `spacing_below`. It will be removed in Spritely 3.0. (called from #{@filename})"
+      def process_position_directive(image_or_value, value_or_nil = nil)
+        Spritely.logger.warn "The `position` directive is deprecated and has been replaced by `opposite`. It will be removed in Spritely 3.0. (called from #{@filename})"
 
-        process_spacing_below_directive(*args)
+        if value_or_nil
+          process_opposite_directive(image_or_value, 'true')
+        else
+          process_opposite_directive('true')
+        end
+      end
+
+      def process_spacing_directive(*args)
+        Spritely.logger.warn "The `spacing` directive is deprecated and has been replaced by `spacing_after`. It will be removed in Spritely 3.0. (called from #{@filename})"
+
+        process_spacing_after_directive(*args)
+      end
+
+      def process_spacing_above_directive(*args)
+        Spritely.logger.warn "The `spacing_above` directive is deprecated and has been replaced by `spacing_before`. It will be removed in Spritely 3.0. (called from #{@filename})"
+
+        process_spacing_before_directive(*args)
       end
 
       # Use `define_method` here because of the dash in the directive name
       define_method("process_spacing-above_directive") do |*args|
-        Spritely.logger.warn "The `spacing-above` directive is deprecated and has been replaced by `spacing_above`. It will be removed in Spritely 3.0. (called from #{@filename})"
+        Spritely.logger.warn "The `spacing-above` directive is deprecated and has been replaced by `spacing_before`. It will be removed in Spritely 3.0. (called from #{@filename})"
 
-        process_spacing_above_directive(*args)
+        process_spacing_before_directive(*args)
+      end
+
+      def process_spacing_below_directive(*args)
+        Spritely.logger.warn "The `spacing_below` directive is deprecated and has been replaced by `spacing_after`. It will be removed in Spritely 3.0. (called from #{@filename})"
+
+        process_spacing_after_directive(*args)
       end
 
       # Use `define_method` here because of the dash in the directive name
       define_method("process_spacing-below_directive") do |*args|
-        Spritely.logger.warn "The `spacing-below` directive is deprecated and has been replaced by `spacing_below`. It will be removed in Spritely 3.0. (called from #{@filename})"
+        Spritely.logger.warn "The `spacing-below` directive is deprecated and has been replaced by `spacing_after`. It will be removed in Spritely 3.0. (called from #{@filename})"
 
-        process_spacing_below_directive(*args)
+        process_spacing_after_directive(*args)
       end
 
       private

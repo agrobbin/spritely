@@ -100,6 +100,16 @@ To reverse the order, add a direction:
 
 The default is `name` (`asc` is the default direction).
 
+#### Layout
+
+There are cases where you have images that need to be organized left-to-right rather than top-to-bottom. In those cases, you can configure the layout:
+
+```
+//= layout horizontal
+```
+
+The default value is `vertical`.
+
 ### Image directives
 
 There are a few different image-related sprite map directives available to you. All of these are available as both global and per-image directives. Per-image directives overwrite global directives. Global directives are set just like per-image ones are, except they don't include an image name.
@@ -116,36 +126,34 @@ Note: While repetition can be done globally, you should exercise caution. If you
 
 #### Positioning
 
-When you want to use a sprited image on the right-hand side of an element, it's useful to position that image to the absolute right of the sprite map. To do so for an image named `arrow.png`:
+When you want to use a sprited image on the opposite side of an element, it's useful to position that image to the right/bottom (depending on the `direction`) of the sprite map. To do so for an image named `arrow.png`:
 
 ```
-//= position arrow right
+//= opposite arrow true
 ```
 
 To do it for all images in a sprite map:
 
 ```
-//= position right
+//= opposite true
 ```
-
-The default value is `left`.
 
 #### Spacing
 
 There are sometimes cases where you want to add some extra spacing (or padding) above or below images in your sprite. To do so for an image named `arrow.png`:
 
 ```
-//= spacing_above arrow 5
-//= spacing_below arrow 10
+//= spacing_before arrow 5
+//= spacing_after arrow 10
 ```
 
-This will add 5 pixels of spacing above `arrow.png` and 10 pixels of spacing below `arrow.png` within the sprite.
+This will add 5 pixels of spacing before `arrow.png` and 10 pixels of spacing after `arrow.png` within the sprite.
 
 To do it for all images in a sprite map:
 
 ```
-//= spacing_above 5
-//= spacing_below 10
+//= spacing_before 5
+//= spacing_after 10
 ```
 
 ## Tests
