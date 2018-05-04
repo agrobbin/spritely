@@ -3,22 +3,30 @@ require 'active_support/core_ext/hash/except'
 
 describe Spritely::SpriteMap do
   let(:directory) { nil }
-  let(:options) { { directory: directory, global: {}, images: { 'some-new-image' => { x: '123', y: '456' }, 'another-image' => { repeat: 'true' } } } }
+  let(:sort) { nil }
+  let(:options) { { directory: directory, sort: sort, global: {}, images: { 'some-new-image' => { x: '123', y: '456' }, 'another-image' => { repeat: 'true' } } } }
   let(:environment) { double(paths: ["#{__dir__}/../fixtures"]) }
 
   subject { Spritely::SpriteMap.new('test', environment, options) }
 
   its(:name) { should eq('test') }
   its(:environment) { should eq(environment) }
-  its(:options) { should eq(options.except(:directory)) }
+  its(:options) { should eq(options.except(:directory, :sort)) }
   its(:directory) { should eq('test') }
+  its(:sort) { should eq(['name']) }
   its(:glob) { should eq('test/*.png') }
-  its(:inspect) { should eq("#<Spritely::SpriteMap name=test directory=test options=#{options.except(:directory)}>") }
+  its(:inspect) { should eq(%~#<Spritely::SpriteMap name=test directory=test sort=["name"] options=#{options.except(:directory, :sort)}>~) }
 
   context 'the directory is set' do
     let(:directory) { 'test/sprite-images' }
 
     its(:directory) { should eq('test/sprite-images') }
+  end
+
+  context 'the sort is set' do
+    let(:sort) { ['name', 'desc'] }
+
+    its(:sort) { should eq(['name', 'desc']) }
   end
 
   describe '#cache_key' do
@@ -30,7 +38,7 @@ describe Spritely::SpriteMap do
   describe '#collection' do
     let(:collection) { double(find: 'find value', width: 'width value', height: 'height value', images: 'images value') }
 
-    before { allow(Spritely::Collection).to receive(:create).with(["#{__dir__}/../fixtures/test/foo.png"], options.except(:directory)).and_return(collection) }
+    before { allow(Spritely::Collection).to receive(:create).with(["#{__dir__}/../fixtures/test/foo.png"], ['name'], options.except(:directory, :sort)).and_return(collection) }
 
     its(:collection) { should eq(collection) }
 

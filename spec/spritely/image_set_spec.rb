@@ -10,6 +10,7 @@ describe Spritely::ImageSet do
   its(:path) { should eq(path) }
   its(:options) { should eq(options) }
   its(:data) { should eq(File.read(path)) }
+  its(:size) { should eq(121) }
   its(:width) { should eq(1) }
   its(:height) { should eq(1) }
   its(:name) { should eq('foo') }

@@ -3,9 +3,10 @@ require 'spritely/image_set'
 module Spritely
   # A `SpriteMap` has a `Collection` that knows how to calculate the size of the
   # sprite, based on image repetition and spacing.
-  class Collection < Struct.new(:files, :options)
+  class Collection < Struct.new(:files, :sort_options, :options)
     def self.create(*args)
       new(*args).tap do |collection|
+        collection.sort!
         collection.position!
       end
     end
@@ -41,6 +42,13 @@ module Spritely
 
     def height
       heights.reduce(:+)
+    end
+
+    def sort!
+      attribute, direction = sort_options
+
+      image_sets.sort_by!(&attribute.to_sym)
+      image_sets.reverse! if direction == 'desc'
     end
 
     # Upon creation, the collection is then positioned appropriately by

@@ -84,6 +84,22 @@ If you have sprite images that are stored in a different location than the defau
 //= directory foo/bar
 ```
 
+#### Sorting
+
+You can sort images in the sprite based on `name`, `width`, `height`, or `size`:
+
+```
+//= sort width
+```
+
+To reverse the order, add a direction:
+
+```
+//= sort width desc
+```
+
+The default is `name` (`asc` is the default direction).
+
 ### Image directives
 
 There are a few different image-related sprite map directives available to you. All of these are available as both global and per-image directives. Per-image directives overwrite global directives. Global directives are set just like per-image ones are, except they don't include an image name.
