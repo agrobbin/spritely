@@ -1,0 +1,35 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: ${{ matrix.ruby_version }} / ${{ matrix.gemfile }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        ruby_version: [2.4.6, 2.5.5, 2.6.3]
+        gemfile: [rails_5_0_sprockets_rails_2, rails_5_0, rails_5_1_sprockets_rails_2, rails_5_1, rails_5_2_sprockets_rails_2, rails_5_2, rails_6_0_sprockets_rails_2, rails_6_0]
+        exclude:
+        - ruby_version: 2.4.6
+          gemfile: rails_6_0_sprockets_rails_2
+        - ruby_version: 2.4.6
+          gemfile: rails_6_0
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@master
+
+    - uses: actions/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby_version }}
+
+    - name: Bundle
+      run: |
+        export BUNDLE_GEMFILE=$PWD/gemfiles/${{ matrix.gemfile }}.gemfile
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+
+    - name: Tests
+      run: bundle exec rspec spec
