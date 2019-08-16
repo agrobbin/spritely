@@ -15,7 +15,10 @@ gemfile:
   - gemfiles/rails_5_1.gemfile
   - gemfiles/rails_5_2_sprockets_rails_2.gemfile
   - gemfiles/rails_5_2.gemfile
-before_install: gem update --system && gem install bundler # remove this once it isn't required by Travis due to Rubygems / Bundler version incompatibilities related to travis-ci/travis-ci#9333
+before_install: # use Bundler 1.x across all matrix combinations (Rails 4.2 doesn't support Bundler 2+)
+  - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
+  - gem install bundler -v '< 2'
+  - bundle version
 script: bundle exec rspec spec
 matrix:
   fast_finish: true
