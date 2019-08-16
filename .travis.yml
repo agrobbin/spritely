@@ -2,8 +2,9 @@
 language: ruby
 sudo: false
 rvm:
-  - 2.4.4
-  - 2.5.1
+  - 2.4.6
+  - 2.5.5
+  - 2.6.3
 gemfile:
   - gemfiles/rails_4_2_sprockets_rails_2.gemfile
   - gemfiles/rails_4_2.gemfile
