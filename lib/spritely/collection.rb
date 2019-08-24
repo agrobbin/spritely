@@ -5,15 +5,24 @@ require 'spritely/layouts/vertical'
 module Spritely
   # A `SpriteMap` has a `Collection` that knows how to calculate the size of the
   # sprite, based on direction, image repetition, and spacing.
-  class Collection < Struct.new(:files, :sort_options, :layout_key, :options)
+  class Collection
     extend Forwardable
 
     def_delegators :layout, :width, :height, :position!
+
+    attr_reader :files, :sort_options, :layout_key, :options
 
     LAYOUTS = {
       horizontal: Layouts::Horizontal,
       vertical: Layouts::Vertical
     }.freeze
+
+    def initialize(files, sort_options, layout_key, options)
+      @files = files
+      @sort_options = sort_options
+      @layout_key = layout_key
+      @options = options
+    end
 
     def self.create(*args)
       new(*args).tap do |collection|

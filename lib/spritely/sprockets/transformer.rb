@@ -3,13 +3,19 @@ require 'spritely/sprite_map'
 
 module Spritely
   module Sprockets
-    class Transformer < Struct.new(:input)
+    class Transformer
+      attr_reader :input
+
       def self.call(input)
         new(input).call
       end
 
       def self.cache_key
         @cache_key ||= "#{name}:#{Spritely::VERSION}".freeze
+      end
+
+      def initialize(input)
+        @input = input
       end
 
       def call
