@@ -10,12 +10,14 @@ jobs:
     strategy:
       matrix:
         ruby_version: [2.4.6, 2.5.5, 2.6.3]
-        gemfile: [rails_5_0_sprockets_rails_2, rails_5_0, rails_5_1_sprockets_rails_2, rails_5_1, rails_5_2_sprockets_rails_2, rails_5_2, rails_6_0_sprockets_rails_2, rails_6_0]
+        gemfile: [rails_5_0_sprockets_rails_2, rails_5_0_sprockets_3, rails_5_0_sprockets_4, rails_5_1_sprockets_rails_2, rails_5_1_sprockets_3, rails_5_1_sprockets_4, rails_5_2_sprockets_rails_2, rails_5_2_sprockets_3, rails_5_2_sprockets_4, rails_6_0_sprockets_rails_2, rails_6_0_sprockets_3, rails_6_0_sprockets_4]
         exclude:
         - ruby_version: 2.4.6
           gemfile: rails_6_0_sprockets_rails_2
         - ruby_version: 2.4.6
-          gemfile: rails_6_0
+          gemfile: rails_6_0_sprockets_3
+        - ruby_version: 2.4.6
+          gemfile: rails_6_0_sprockets_4
       fail-fast: false
 
     steps:
