@@ -2,7 +2,6 @@ Spritely
 ========
 
 [![Code Climate](https://codeclimate.com/github/agrobbin/spritely.png)](https://codeclimate.com/github/agrobbin/spritely)
-[![Dependency Status](https://gemnasium.com/agrobbin/spritely.svg)](https://gemnasium.com/agrobbin/spritely)
 
 Spritely hooks into the Sprockets asset packaging system to allow you to easily generate sprite maps.
 
