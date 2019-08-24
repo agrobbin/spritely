@@ -1,6 +1,12 @@
 module Spritely
   module Layouts
-    class Base < Struct.new(:image_sets)
+    class Base
+      attr_reader :image_sets
+
+      def initialize(image_sets)
+        @image_sets = image_sets
+      end
+
       def position!
         raise NotImplementedError, "#{self.class} must implement #position!"
       end

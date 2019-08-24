@@ -1,5 +1,5 @@
 module Spritely
-  class Image < Struct.new(:data)
+  Image = Struct.new(:data) do
     attr_accessor :top, :left
   end
 end
