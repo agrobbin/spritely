@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'ostruct'
 
 describe Spritely::ImageSet do
   let(:path) { "#{__dir__}/../fixtures/test/foo.png" }

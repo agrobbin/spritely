@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'ostruct'
 
 describe Spritely::Generators::ChunkyPng do
   let(:png_canvas) { double(metadata: {}, to_blob: "final PNG content") }
